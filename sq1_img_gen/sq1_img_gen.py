@@ -1,18 +1,25 @@
-import reflex as rx
-import random
+import reflex as rx # type: ignore
 
 ############################################################
 
-class State(rx.State):
+class FormState(rx.State):
     form_data:dict = {}
-    checked:bool = False
+    U:bool = True
+    E:bool = True
+    D:bool = True
 
     def handle_submit(self, form_data:dict):
         """Handle the form submit."""
         self.form_data = form_data
 
-    def change(self):
-        self.checked = not self.checked
+    def change_U(self):
+        self.U = not self.U
+
+    def change_E(self):
+        self.E = not self.E
+
+    def change_D(self):
+        self.D = not self.D
 
 ############################################################
 
@@ -58,32 +65,73 @@ def index():
                                         align="center"
                                     ),
                                 ),
-                            ),  
+
+                                margin="auto"
+                            ),
+                            rx.radio(
+                                ["Normal", "Cubeshape", "OBL"],
+                                default_value="Normal",
+                                name="scheme",
+                                direction="row",
+                                margin="auto"
+                            ),
                             rx.hstack(
                                 rx.switch(
-                                    name="include_equator",
-                                    on_change=State.change(),
+                                    name="include_U",
+                                    on_change=FormState.change_U(),
                                     default_checked=True,
                                 ),
                                 rx.cond(
-                                    State.checked,
-                                    rx.text("Do not include equator"),
-                                    rx.text("Include equator"),
+                                    FormState.U,
+                                    rx.text("Include top layer"),
+                                    rx.text("Do not include top layer"),
                                 ),
 
                                 margin="auto"
                             ),
-                            rx.button("Generate", type="submit", margin="auto"),
+                            rx.hstack(
+                                rx.switch(
+                                    name="include_E",
+                                    on_change=FormState.change_E(),
+                                    default_checked=True,
+                                ),
+                                rx.cond(
+                                    FormState.E,
+                                    rx.text("Include equator"),
+                                    rx.text("Do not include equator"),
+                                ),
+
+                                margin="auto"
+                            ),
+                            rx.hstack(
+                                rx.switch(
+                                    name="include_D",
+                                    on_change=FormState.change_D(),
+                                    default_checked=True,
+                                ),
+                                rx.cond(
+                                    FormState.D,
+                                    rx.text("Include bottom layer"),
+                                    rx.text("Do not include bottom layer"),
+                                ),
+
+                                margin="auto"
+                            ),
+                            rx.cond(
+                                FormState.U | FormState.E | FormState.D,
+                                rx.button(rx.icon("image"), "Generate", type="submit", margin="auto", size="3"),
+                                rx.button(rx.icon("image"), "Generate", type="submit", margin="auto", size="3", disabled=True, variant="outline"),
+                            )
                         ),
                     ),
 
 
-                    on_submit=State.handle_submit,
+                    on_submit=FormState.handle_submit,
                     reset_on_submit=False,
                 ),
 
                 rx.heading("Input"),
-                rx.text(State.form_data.to_string())
+                rx.text(FormState.form_data.to_string())
             ),
 
             wrap="wrap"
