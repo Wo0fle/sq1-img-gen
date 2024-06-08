@@ -1,2 +1,3 @@
-# sq1-img-gen
- A Square-1 image generator
+# Seby's Square-1 Image Generator
+
+ill put a link here once it's up
