@@ -30,8 +30,7 @@ def index():
         rx.center(
             rx.vstack(
                 rx.heading("Seby's Square-1 Image Generator",
-                    margin="auto",
-                    margin_bottom="20px"
+                    margin_bottom="30px"
                 ),
 
                 rx.form(
@@ -44,16 +43,15 @@ def index():
                                     variant="surface",
                                     size="2",
                                     rows="6",
-                                    margin="auto"
                                 ),
                                 rx.radio(
                                     ["Case", "Algorithm", "State"],
                                     default_value="Case",
-                                    margin="auto",
-                                    name="input_type"
+                                    name="input_type",
+                                    spacing="3"
                                 ),
                                 rx.popover.root(
-                                    rx.popover.trigger(rx.icon("circle-help"), margin="auto", _hover={"cursor": "pointer"}),
+                                    rx.popover.trigger(rx.icon("circle-help"), _hover={"cursor": "pointer"}),
                                     rx.popover.content(
                                         rx.vstack(
                                             rx.text(rx.text.strong("Case: "), "Your input will solve the Square-1 in the generated image."),
@@ -65,15 +63,13 @@ def index():
                                         align="center"
                                     ),
                                 ),
-
-                                margin="auto"
                             ),
                             rx.radio(
-                                ["Normal", "Cubeshape", "OBL"],
+                                ["Normal", "Orientation", "Shape"],
                                 default_value="Normal",
                                 name="scheme",
                                 direction="row",
-                                margin="auto"
+                                spacing="5"
                             ),
                             rx.hstack(
                                 rx.switch(
@@ -86,8 +82,6 @@ def index():
                                     rx.text("Include top layer"),
                                     rx.text("Do not include top layer"),
                                 ),
-
-                                margin="auto"
                             ),
                             rx.hstack(
                                 rx.switch(
@@ -100,8 +94,6 @@ def index():
                                     rx.text("Include equator"),
                                     rx.text("Do not include equator"),
                                 ),
-
-                                margin="auto"
                             ),
                             rx.hstack(
                                 rx.switch(
@@ -114,13 +106,24 @@ def index():
                                     rx.text("Include bottom layer"),
                                     rx.text("Do not include bottom layer"),
                                 ),
+                            ),
+                            rx.accordion.root(
+                                rx.accordion.item(
+                                    header="Advanced Settings",
+                                    content=rx.center(
+                                        rx.text("testingtesting"),
 
-                                margin="auto"
+                                        color=rx.color_mode_cond(light="#000000", dark="#FFFFFF"),
+                                    )
+                                ),
+
+                                collapsible=True,
+                                variant="ghost",
                             ),
                             rx.cond(
                                 FormState.U | FormState.E | FormState.D,
-                                rx.button(rx.icon("image"), "Generate", type="submit", margin="auto", size="3"),
-                                rx.button(rx.icon("image"), "Generate", type="submit", margin="auto", size="3", disabled=True, variant="outline"),
+                                rx.button(rx.icon("image"), "Generate", type="submit", margin_top="20px", size="3"),
+                                rx.button(rx.icon("image"), "Generate", type="submit", margin_top="20px", size="3", disabled=True, variant="outline"),
                             )
                         ),
                     ),
@@ -131,19 +134,22 @@ def index():
                 ),
 
                 rx.heading("Input"),
-                rx.text(FormState.form_data.to_string())
+                rx.text(FormState.form_data.to_string()),
             ),
-
-            wrap="wrap"
         ),
 
-
-        size="2"
+        padding="20px",
     )
         
 ############################################################
 
+all_is_margin_auto = {
+    "*": {
+        "margin": "auto",
+    },
+}
+
 app = rx.App(
-    theme=rx.theme(appearance="dark"), accent_color="blue"
+    theme=rx.theme(appearance="dark"), accent_color="blue", style=all_is_margin_auto,
 )
 app.add_page(index)
