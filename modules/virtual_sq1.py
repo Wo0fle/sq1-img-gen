@@ -1,7 +1,7 @@
 class Square1:
     def __init__(self) -> None:
         top = Layer("A1B2C3D4")
-        bottom = Layer("G8H5E6F7")
+        bottom = Layer("5E6F7G8H")
         equator_flipped = False
 
         self.top = top
@@ -9,11 +9,11 @@ class Square1:
         self.bottom = bottom
 
     def __str__(self) -> str:
-        return str(self.top) + str(self.equator_flipped) + str(self.bottom)
+        return str(self.top) + ", " + str(self.equator_flipped) + ", " + str(self.bottom)
 
     def reset(self):
         top = Layer("A1B2C3D4")
-        bottom = Layer("G8H5E6F7")
+        bottom = Layer("5E6F7G8H")
         equator_flipped = False
 
         self.top = top
