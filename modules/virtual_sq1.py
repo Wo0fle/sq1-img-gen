@@ -73,7 +73,7 @@ class Layer:
                     self.current_state = piece + self.current_state[:-1]
                 elif value > amount:
                     if amount != 0 or not self.is_sliceable():
-                        print(f"Incomplete turn: layer attempted to rotate to an unsliceable position. Layer reset to initial position.")
+                        print("Incomplete turn: layer attempted to rotate to an unsliceable position. Layer reset to initial position.")
                         self.current_state = initial_state[::-1]
 
                     break
@@ -92,7 +92,7 @@ class Layer:
                     self.current_state = self.current_state[1:] + piece
                 elif value > amount:
                     if amount != 0 or not self.is_sliceable():
-                        print(f"Incomplete turn: layer attempted to rotate to an unsliceable position. Layer reset to initial position.")
+                        print("Incomplete turn: layer attempted to rotate to an unsliceable position. Layer reset to initial position.")
                         self.current_state = initial_state
 
                     break
