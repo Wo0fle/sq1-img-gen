@@ -1,25 +1,34 @@
 import reflex as rx
+#import sys
+#from pathlib import Path
+
+#sys.path.append(str(Path(__file__).resolve().parent.parent / 'modules'))
+
+#import virtual_sq1
 
 ############################################################
 
 class FormState(rx.State):
     form_data:dict = {}
-    U:bool = True
-    E:bool = True
-    D:bool = True
+    u_layer:bool = True
+    e_layer:bool = True
+    d_layer:bool = True
 
     def handle_submit(self, form_data:dict):
         """Handle the form submit."""
         self.form_data = form_data
 
     def change_U(self):
-        self.U = not self.U
+        """Add/remove top layer to generated image."""
+        self.u_layer = not self.u_layer
 
     def change_E(self):
-        self.E = not self.E
+        """Add/remove equator to generated image."""
+        self.e_layer = not self.e_layer
 
     def change_D(self):
-        self.D = not self.D
+        """Add/remove bottom layer to generated image.."""
+        self.d_layer = not self.d_layer
 
 ############################################################
 
