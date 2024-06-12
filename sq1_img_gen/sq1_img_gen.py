@@ -1,4 +1,4 @@
-import reflex as rx # type: ignore
+import reflex as rx
 
 ############################################################
 
@@ -33,7 +33,7 @@ def index():
                     margin_bottom="30px"
                 ),
 
-                rx.form(
+                rx.form.root(
                     rx.center(
                         rx.vstack(
                             rx.hstack(
@@ -107,14 +107,14 @@ def index():
                                     rx.text("Do not include bottom layer"),
                                 ),
                             ),
-                            rx.accordion.root(
+                            rx.accordion.root( # probably replace this with something else, i want to avoid fix_arrow.css (ideally)
                                 rx.accordion.item(
                                     header="Advanced Settings",
                                     content=rx.center(
-                                        rx.text("testingtesting"),
+                                        rx.text("you'll eventually be able to edit color scheme, number pieces, other stuff"),
 
                                         color=rx.color_mode_cond(light="#000000", dark="#FFFFFF"),
-                                    )
+                                    ),
                                 ),
 
                                 collapsible=True,
@@ -150,6 +150,9 @@ all_is_margin_auto = {
 }
 
 app = rx.App(
-    theme=rx.theme(appearance="dark"), accent_color="blue", style=all_is_margin_auto,
+    theme=rx.theme(appearance="dark"),
+    accent_color="blue",
+    style=all_is_margin_auto,
+    stylesheets=["/fix_arrow.css"]
 )
 app.add_page(index)
