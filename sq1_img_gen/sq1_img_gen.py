@@ -1,10 +1,17 @@
 import reflex as rx
-#import sys
-#from pathlib import Path
+#from modules.virtual_sq1 import Square1
+#from modules.img_genner import generate_image
 
-#sys.path.append(str(Path(__file__).resolve().parent.parent / 'modules'))
+"""
+    Here's the basic plan:
+        - read the input alg from the site ✅
+        - apply the alg to virtual_sq1 (ALMOST DONE)
+        - feed final state to img_genner, which generates the image
+        - show that image on the site
+    
+    I'll deal with customization after I get the basic plan done
 
-#import virtual_sq1
+"""
 
 ############################################################
 

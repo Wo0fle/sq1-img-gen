@@ -2,25 +2,18 @@ class Square1:
     """A virtual Square-1 object."""
 
     def __init__(self) -> None:
-        top = Layer("A1B2C3D4")
-        bottom = Layer("5E6F7G8H")
-        equator_flipped = False
-
-        self.top = top
-        self.equator_flipped = equator_flipped
-        self.bottom = bottom
+        self.top = Layer("A1B2C3D4")
+        self.equator_flipped = False
+        self.bottom = Layer("5E6F7G8H")
 
     def __str__(self) -> str:
-        return str(self.top) + ", " + str(self.equator_flipped) + ", " + str(self.bottom)
+        if self.equator_flipped:
+            return f"{self.top}/{self.bottom}"
+        else:
+            return f"{self.top}|{self.bottom}"
 
     def reset(self):
-        top = Layer("A1B2C3D4")
-        bottom = Layer("5E6F7G8H")
-        equator_flipped = False
-
-        self.top = top
-        self.equator_flipped = equator_flipped
-        self.bottom = bottom
+        self.__init__()
     
     def flip_equator(self):
         self.equator_flipped = not self.equator_flipped
@@ -72,14 +65,10 @@ class Layer:
         value = 0
 
         for piece in self.current_state:
-            #print("piece: " + str(piece))
-
             if piece in "12345678":
                 value += 1
             elif piece in "ABCDEFGH":
                 value += 2
-
-            #print("value: " + str(value))
 
             if value == 6:
                 return True
@@ -129,13 +118,16 @@ class Layer:
 #########################################################
 
 sq1 = Square1()
-print(f"Before: top-{sq1.top}, equator flipped?-{sq1.equator_flipped}, bottom-{sq1.bottom}")
 
-sq1.top.turn(1)
-sq1.bottom.turn(-1)
+print(sq1)
+
 sq1.slash()
-sq1.top.turn(6)
-sq1.bottom.turn(6)
+sq1.top.turn(3)
+sq1.slash()
+sq1.top.turn(-3)
+sq1.bottom.turn(-3)
+sq1.slash()
+sq1.bottom.turn(3)
 sq1.slash()
 
-print(f"Before: top-{sq1.top}, equator flipped?-{sq1.equator_flipped}, bottom-{sq1.bottom}")
+print(sq1)
