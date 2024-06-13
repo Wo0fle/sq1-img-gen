@@ -1,3 +1,5 @@
 # Seby's Square-1 Image Generator
 
-ill put a link here once it's up
+## Made using [Reflex](https://github.com/reflex-dev/reflex)!
+
+ill put instructions and stuff later probably
