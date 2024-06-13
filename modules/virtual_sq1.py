@@ -19,36 +19,55 @@ class Square1:
         self.equator_flipped = not self.equator_flipped
 
     def slash(self): # lol "slice" is taken by Python already
-        if self.top.is_sliceable() and self.bottom.is_sliceable():
-            value = 0
+        value = 0
 
-            for i in range(len(self.top.current_state)):
-                if self.top.current_state[i] in "12345678":
-                    value += 1
-                elif self.top.current_state[i] in "ABCDEFGH":
-                    value += 2
+        for i in range(len(self.top.current_state)):
+            if self.top.current_state[i] in "12345678":
+                value += 1
+            elif self.top.current_state[i] in "ABCDEFGH":
+                value += 2
 
-                if value == 6:
-                    left_side_U = self.top.current_state[:i+1]
-                    right_side_U = self.top.current_state[i+1:]
-            
-            value = 0
+            if value == 6:
+                left_side_U = self.top.current_state[:i+1]
+                right_side_U = self.top.current_state[i+1:]
+        
+        value = 0
 
-            for i in range(len(self.bottom.current_state)):
-                if self.bottom.current_state[i] in "12345678":
-                    value += 1
-                elif self.bottom.current_state[i] in "ABCDEFGH":
-                    value += 2
+        for i in range(len(self.bottom.current_state)):
+            if self.bottom.current_state[i] in "12345678":
+                value += 1
+            elif self.bottom.current_state[i] in "ABCDEFGH":
+                value += 2
 
-                if value == 6:
-                    right_side_D = self.bottom.current_state[:i+1]
-                    left_side_D = self.bottom.current_state[i+1:]
-            
-            self.top.current_state = left_side_U + right_side_D
-            self.bottom.current_state =  right_side_U + left_side_D
-            self.flip_equator()
-        else:
-            print("uhoh")
+            if value == 6:
+                right_side_D = self.bottom.current_state[:i+1]
+                left_side_D = self.bottom.current_state[i+1:]
+        
+        self.top.current_state = left_side_U + right_side_D
+        self.bottom.current_state =  right_side_U + left_side_D
+        self.flip_equator()
+    
+    def apply_alg(self, alg:str):
+        simplfied_alg = list(alg)
+
+        for char in alg:
+            if not char.isnumeric() and ((char != '/') and (char != ',') and (char != '-')):
+                simplfied_alg.remove(char)
+
+        simplfied_alg = [slash.split(',') for slash in (''.join(simplfied_alg)).split('/')]
+
+        for turns in simplfied_alg:
+            try:
+                self.top.turn(int(turns[0]))
+            except:
+                pass
+            try:
+                self.bottom.turn(int(turns[1]))
+            except:
+                pass
+
+            self.slash()
+        self.slash()
 
 #########################################################
 
@@ -120,14 +139,5 @@ class Layer:
 sq1 = Square1()
 
 print(sq1)
-
-sq1.slash()
-sq1.top.turn(3)
-sq1.slash()
-sq1.top.turn(-3)
-sq1.bottom.turn(-3)
-sq1.slash()
-sq1.bottom.turn(3)
-sq1.slash()
-
+sq1.apply_alg("/ (-3,0) / (0,3) / (0,-3) / (0,3) / (2,0) / (0,2) / (-2,0) / (4,0) / (0,-2) / (0,2) / (-1,4) / (0,-3) / (0,3)")
 print(sq1)
