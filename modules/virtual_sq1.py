@@ -26,7 +26,36 @@ class Square1:
         self.equator_flipped = not self.equator_flipped
 
     def slash(self): # lol "slice" is taken by Python already
-        pass
+        if self.top.is_sliceable() and self.bottom.is_sliceable():
+            value = 0
+
+            for i in range(len(self.top.current_state)):
+                if self.top.current_state[i] in "12345678":
+                    value += 1
+                elif self.top.current_state[i] in "ABCDEFGH":
+                    value += 2
+
+                if value == 6:
+                    left_side_U = self.top.current_state[:i+1]
+                    right_side_U = self.top.current_state[i+1:]
+            
+            value = 0
+
+            for i in range(len(self.bottom.current_state)):
+                if self.bottom.current_state[i] in "12345678":
+                    value += 1
+                elif self.bottom.current_state[i] in "ABCDEFGH":
+                    value += 2
+
+                if value == 6:
+                    right_side_D = self.bottom.current_state[:i+1]
+                    left_side_D = self.bottom.current_state[i+1:]
+            
+            self.top.current_state = left_side_U + right_side_D
+            self.bottom.current_state =  right_side_U + left_side_D
+            self.flip_equator()
+        else:
+            print("uhoh")
 
 #########################################################
 
@@ -100,6 +129,13 @@ class Layer:
 #########################################################
 
 sq1 = Square1()
-print(sq1.bottom)
-sq1.bottom.turn(2)
-print(sq1.bottom)
+print(f"Before: top-{sq1.top}, equator flipped?-{sq1.equator_flipped}, bottom-{sq1.bottom}")
+
+sq1.top.turn(1)
+sq1.bottom.turn(-1)
+sq1.slash()
+sq1.top.turn(6)
+sq1.bottom.turn(6)
+sq1.slash()
+
+print(f"Before: top-{sq1.top}, equator flipped?-{sq1.equator_flipped}, bottom-{sq1.bottom}")
