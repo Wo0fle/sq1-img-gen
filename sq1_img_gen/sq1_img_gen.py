@@ -22,19 +22,15 @@ class FormState(rx.State):
     d_layer:bool = True
 
     def handle_submit(self, form_data:dict):
-        """Handle the form submit."""
         self.form_data = form_data
 
     def change_U(self):
-        """Add/remove top layer to generated image."""
         self.u_layer = not self.u_layer
 
     def change_E(self):
-        """Add/remove equator to generated image."""
         self.e_layer = not self.e_layer
 
     def change_D(self):
-        """Add/remove bottom layer to generated image.."""
         self.d_layer = not self.d_layer
 
 ############################################################
