@@ -58,13 +58,31 @@ class Square1:
 
         for turns in simplfied_alg:
             try:
-                self.top.turn(int(turns[0]))
+                turn_amount = int(turns[0])
+
+                while turn_amount > 6:
+                    turn_amount -= 6
+
+                self.top.turn(turn_amount)
             except:
-                pass
+                if turns[0] != '':
+                    print('MULTIPLE "-" DETECTED: Turn ignored.')
+            
             try:
-                self.bottom.turn(int(turns[1]))
+                turn_amount = int(turns[1])
+
+                while turn_amount > 6:
+                    turn_amount -= 6
+
+                self.bottom.turn(turn_amount)
+            except ValueError:
+                if turns[1] != '':
+                    print('MULTIPLE "-" DETECTED: Turn ignored.')
             except:
                 pass
+            
+            if len(turns) > 2:
+                print('MULTIPLE "," DETECTED: Ignoring extra turns.')
 
             self.slash()
         self.slash()
@@ -110,7 +128,7 @@ class Layer:
                     self.current_state = piece + self.current_state[:-1]
                 elif value > amount:
                     if amount != 0 or not self.is_sliceable():
-                        print("Incomplete turn: layer attempted to rotate to an unsliceable position. Layer reset to initial position.")
+                        print("INCOMPLETE TURN: Turn ignored.")
                         self.current_state = initial_state[::-1]
 
                     break
@@ -129,7 +147,7 @@ class Layer:
                     self.current_state = self.current_state[1:] + piece
                 elif value > amount:
                     if amount != 0 or not self.is_sliceable():
-                        print("Incomplete turn: layer attempted to rotate to an unsliceable position. Layer reset to initial position.")
+                        print("INCOMPLETE TURN: Turn ignored.")
                         self.current_state = initial_state
 
                     break
@@ -138,6 +156,6 @@ class Layer:
 
 sq1 = Square1()
 
-print(sq1)
-sq1.apply_alg("/ (-3,0) / (0,3) / (0,-3) / (0,3) / (2,0) / (0,2) / (-2,0) / (4,0) / (0,-2) / (0,2) / (-1,4) / (0,-3) / (0,3)")
-print(sq1)
+print(f"Before: {sq1}")
+sq1.apply_alg("(0,-1)/ (0,-3)/ (-5,4)/ (-4,-1)/ (6,0)/ (-2,-5)/ (0,-1)/ (3,0)/ (3,0)/ (5,0)/ (-4,0)/ (1,0)/ (-2,-5)/ (-1,0)")
+print(f"After: {sq1}")
