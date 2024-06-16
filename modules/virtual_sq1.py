@@ -151,11 +151,57 @@ class Square1:
     def apply_state(self, state:str) -> None:
         """Changes the Square1's state to match the input state `state`."""
 
-        # should i even do this?? or should i just take the input state from the site and directly send it to img_genner? im thinking leave it here for error handling
+        req_pieces = "ABCDEFGH12345678"
+        state = state.upper()
+        state_list = list(state)
 
-        ...
+        self.__init__()
+        
+        for piece in req_pieces:
+            if piece in state_list:
+                state_list.remove(piece)
+        
+        if len(state_list) > 1:
+            print('SYNTAX ERROR involving extra/nonexistent pieces detected!')
+            self.__init__()
+            #self.error_detected(2, )
+        else:
+            value = 0
 
-    def error_detected(self, input_type:int, error_turns:list=[], error_turns_index:int=0, error_simplfied_alg:list=[]) -> None:
+            if len(state_list) == 1:
+                state_list = list(state)
+
+                if "/" in state:
+                    self.flip_equator()
+                    state_list = list(state)
+                    state_list.remove("/")
+                elif "|" in state:
+                    state_list = list(state)
+                    state_list.remove("|")
+            else:
+                state_list = list(state)
+            
+            for i in range(len(state)):
+                if state[i] in "12345678":
+                    value += 1
+                elif state[i] in "ABCDEFGH":
+                    value += 2
+
+                if value == 12:
+                    new_top = ''.join(state_list[:i+1])
+                    new_bottom = ''.join(state_list[i+1:])
+
+                    self.top = Layer(new_top)
+                    self.bottom = Layer(new_bottom)
+
+                    break
+                elif value > 12:
+                    print('SYNTAX ERROR involving impossible layer state detected!')
+                    self.__init__()
+                    #self.error_detected(2, )
+                    break
+        
+    def error_detected(self, input_type:int, error_turns:list, error_turns_index:int, error_simplfied_alg:list) -> None:
         """
         Prints an error message depending on the input type `input_type` (where 0 is "Case", 1 is "Algorithm", and 2 is "State").
         
@@ -251,5 +297,5 @@ class Layer:
 sq1 = Square1()
 
 print(f"\nBefore: {sq1}\n")
-sq1.apply_alg("(1,0) / (-3,3) / (3,-3) / (-1,0) / (0,3) / (0,-3) / (0,3) / (0,-3) /", True)
+sq1.apply_state("4h675dae|21gbc3f8")
 print(f"\nAfter: {sq1}\n")
