@@ -1,11 +1,11 @@
 import reflex as rx
-#from modules.virtual_sq1 import Square1
+from modules.virtual_sq1 import Square1
 #from modules.img_genner import generate_image
 
 """
     Here's the basic plan:
         - read the input alg from the site ✅
-        - apply the alg to virtual_sq1 (ALMOST DONE)
+        - apply the alg to virtual_sq1 ✅
         - feed final state to img_genner, which generates the image
         - show that image on the site
     

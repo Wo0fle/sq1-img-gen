@@ -90,7 +90,7 @@ class Square1:
                     break
             except:
                 if simplfied_alg[i][0] != '':
-                    print('SYNTAX ERROR involving "-" detected!')
+                    print('\nSYNTAX ERROR involving "-" detected!')
                     self.__init__()
                     legal = False
                     break
@@ -110,7 +110,7 @@ class Square1:
                     break
             except ValueError:
                 if simplfied_alg[i][1] != '':
-                    print('SYNTAX ERROR involving "-" detected!')
+                    print('\nSYNTAX ERROR involving "-" detected!')
                     self.__init__()
                     legal = False
                     break
@@ -118,7 +118,7 @@ class Square1:
                 pass # assume 0 for bottom turn if there's only one input
             
             if len(simplfied_alg[i]) > 2:
-                print('SYNTAX ERROR involving "," detected!')
+                print('\nSYNTAX ERROR involving "," detected!')
                 self.__init__()
                 legal = False
                 break
@@ -129,9 +129,9 @@ class Square1:
             self.slash()
         else:
             if for_case:
-                self.error_detected(0, simplfied_alg[i], i, simplfied_alg)
+                self.error_detected(0, simplfied_alg, simplfied_alg[i], i)
             else:
-                self.error_detected(1, simplfied_alg[i], i, simplfied_alg)
+                self.error_detected(1, simplfied_alg, simplfied_alg[i], i)
     
     def invert_alg(self, simplified_alg:list) -> list:
         """Inverts the input simplified algorithm `simplified_alg`."""
@@ -158,13 +158,19 @@ class Square1:
         self.__init__()
         
         for piece in req_pieces:
+            if len(state_list) == 0:
+                print('\nSYNTAX ERROR involving missing pieces detected!')
+                self.__init__()
+                self.error_detected(2, state)
+                break
+            
             if piece in state_list:
                 state_list.remove(piece)
         
         if len(state_list) > 1:
-            print('SYNTAX ERROR involving extra/nonexistent pieces detected!')
+            print('\nSYNTAX ERROR involving extra/nonexistent pieces detected!')
             self.__init__()
-            #self.error_detected(2, )
+            self.error_detected(2, state)
         else:
             value = 0
 
@@ -196,25 +202,25 @@ class Square1:
 
                     break
                 elif value > 12:
-                    print('SYNTAX ERROR involving impossible layer state detected!')
+                    print('\nSYNTAX ERROR involving impossible layer state detected!')
                     self.__init__()
-                    #self.error_detected(2, )
+                    self.error_detected(2, state)
                     break
         
-    def error_detected(self, input_type:int, error_turns:list, error_turns_index:int, error_simplfied_alg:list) -> None:
+    def error_detected(self, input_type:int, errored_input, error_turns:list=[], error_turns_index:int=0) -> None:
         """
         Prints an error message depending on the input type `input_type` (where 0 is "Case", 1 is "Algorithm", and 2 is "State").
         
-        All other parameters (`error_turns`, `error_turns_index`, `error_simplfied_alg`) are the specifics of where the error occurred, and depend on the `input_type`.
+        For Case and Algorithm: `error_turns` and `error_turns_index` are the specifics of where the error occurred in `errored_input`.
         """
         if input_type == 0: # case
-            self.invert_alg(error_simplfied_alg)
+            self.invert_alg(errored_input)
 
-            print(f'Error at "{','.join(error_turns)}" (move #{len(error_simplfied_alg) - error_turns_index}).\nSquare-1 reset.')
+            print(f'Error at "{','.join(error_turns)}" (move #{len(errored_input) - error_turns_index}).\nSquare-1 reset.\n')
         elif input_type == 1: # alg
-            print(f'Error at "{','.join(error_turns)}" (move #{error_turns_index + 1}).\nSquare-1 reset.')
+            print(f'Error at "{','.join(error_turns)}" (move #{error_turns_index + 1}).\nSquare-1 reset.\n')
         elif input_type == 2: # state
-            ...
+            print(f'Error with "{errored_input}".\nSquare-1 reset.\n')
 
 #########################################################
 
@@ -264,7 +270,7 @@ class Layer:
                     self.current_state = piece + self.current_state[:-1]
                 else:
                     if amount != 0 or not self.is_sliceable():
-                        print('LOGIC ERROR involving an incomplete turn detected!')
+                        print('\nLOGIC ERROR involving an incomplete turn detected!')
                         self.current_state = initial_state[::-1]
                         return False
 
@@ -284,18 +290,10 @@ class Layer:
                     self.current_state = self.current_state[1:] + piece
                 else:
                     if amount != 0 or not self.is_sliceable():
-                        print('LOGIC ERROR involving an incomplete turn detected!')
+                        print('\nLOGIC ERROR involving an incomplete turn detected!')
                         self.current_state = initial_state
                         return False
 
                     return True
         else:
             return True
-
-#########################################################
-
-sq1 = Square1()
-
-print(f"\nBefore: {sq1}\n")
-sq1.apply_state("4h675dae|21gbc3f8")
-print(f"\nAfter: {sq1}\n")
