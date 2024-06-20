@@ -1,5 +1,5 @@
 import reflex as rx
-from modules.virtual_sq1 import Square1
+from virtual_sq1 import Square1
 #from modules.img_genner import generate_image
 
 """
