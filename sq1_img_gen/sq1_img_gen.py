@@ -1,6 +1,6 @@
 import reflex as rx
 from virtual_sq1 import Square1
-#from modules.img_genner import generate_image
+# from modules.img_genner import generate_image
 
 """
     Here's the basic plan:
@@ -8,21 +8,34 @@ from virtual_sq1 import Square1
         - apply the alg to virtual_sq1 ✅
         - feed final state to img_genner, which generates the image
         - show that image on the site
-    
+
     I'll deal with customization after I get the basic plan done
 
 """
 
-############################################################
 
 class FormState(rx.State):
-    form_data:dict = {}
-    u_layer:bool = True
-    e_layer:bool = True
-    d_layer:bool = True
+    form_data: dict = {}
+    u_layer: bool = True
+    e_layer: bool = True
+    d_layer: bool = True
+    squan_state = ""
 
-    def handle_submit(self, form_data:dict):
-        self.form_data = form_data
+    def handle_submit(self, form_data: dict):
+        self.form_data = form_data  # probably remove this? not sure it'll be needed
+
+        squan = Square1()
+
+        if form_data["input_type"] == "Case":
+            squan.apply_alg(form_data["text_input"], True)
+        elif form_data["input_type"] == "Algorithm":
+            squan.apply_alg(form_data["text_input"])
+        else:
+            squan.apply_state(form_data["text_input"])
+
+        self.squan_state = squan.__str__()  # i think i need to update virtual_sq1 to better handle errors
+
+        # generate_image(self.squan_state, form_data["scheme"], form_data.get("include_U"), form_data.get("include_E"), form_data.get("include_D"))
 
     def change_U(self):
         self.u_layer = not self.u_layer
@@ -33,7 +46,6 @@ class FormState(rx.State):
     def change_D(self):
         self.d_layer = not self.d_layer
 
-############################################################
 
 def index():
     return rx.container(
@@ -41,7 +53,8 @@ def index():
 
         rx.center(
             rx.vstack(
-                rx.heading("Seby's Square-1 Image Generator",
+                rx.heading(
+                    "Seby's Square-1 Image Generator",
                     margin_bottom="30px"
                 ),
 
@@ -51,7 +64,7 @@ def index():
                             rx.hstack(
                                 rx.text_area(
                                     placeholder="/ (3,0) / (-3,-3) / (0,3) /",
-                                    name="input",
+                                    name="text_input",
                                     variant="surface",
                                     size="2",
                                     rows="6",
@@ -60,7 +73,7 @@ def index():
                                     ["Case", "Algorithm", "State"],
                                     default_value="Case",
                                     name="input_type",
-                                    spacing="3"
+                                    spacing="3",
                                 ),
                                 rx.popover.root(
                                     rx.popover.trigger(rx.icon("circle-help"), _hover={"cursor": "pointer"}),
@@ -90,7 +103,7 @@ def index():
                                     default_checked=True,
                                 ),
                                 rx.cond(
-                                    FormState.U,
+                                    FormState.u_layer,
                                     rx.text("Include top layer"),
                                     rx.text("Do not include top layer"),
                                 ),
@@ -102,7 +115,7 @@ def index():
                                     default_checked=True,
                                 ),
                                 rx.cond(
-                                    FormState.E,
+                                    FormState.e_layer,
                                     rx.text("Include equator"),
                                     rx.text("Do not include equator"),
                                 ),
@@ -114,12 +127,12 @@ def index():
                                     default_checked=True,
                                 ),
                                 rx.cond(
-                                    FormState.D,
+                                    FormState.d_layer,
                                     rx.text("Include bottom layer"),
                                     rx.text("Do not include bottom layer"),
                                 ),
                             ),
-                            rx.accordion.root( # probably replace this with something else, i want to avoid fix_arrow.css (ideally)
+                            rx.accordion.root(  # probably replace this with something else, i want to avoid fix_arrow.css (ideally)
                                 rx.accordion.item(
                                     header="Advanced Settings",
                                     content=rx.center(
@@ -133,7 +146,7 @@ def index():
                                 variant="ghost",
                             ),
                             rx.cond(
-                                FormState.U | FormState.E | FormState.D,
+                                FormState.u_layer | FormState.e_layer | FormState.d_layer,
                                 rx.button(rx.icon("image"), "Generate", type="submit", margin_top="20px", size="3"),
                                 rx.button(rx.icon("image"), "Generate", type="submit", margin_top="20px", size="3", disabled=True, variant="outline"),
                             )
@@ -147,13 +160,13 @@ def index():
 
                 rx.heading("Input"),
                 rx.text(FormState.form_data.to_string()),
+                rx.text(FormState.squan_state),
             ),
         ),
 
         padding="20px",
     )
-        
-############################################################
+
 
 all_is_margin_auto = {
     "*": {

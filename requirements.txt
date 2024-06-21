@@ -1,2 +1,3 @@
-reflex==0.5.3
-virtual_sq1>=1.0.0
+reflex==0.5.4
+virtual_sq1==1.0.0
+pygame==2.5.2
