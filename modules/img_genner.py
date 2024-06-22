@@ -9,6 +9,18 @@ def center(vector, new_center):
     return [new_center[0]+vector[0], new_center[1]+vector[1]]
 
 
+def darken(color):
+    darkening_attempt = [i-100 for i in color]
+    actually_darkened_color = []
+
+    for value in darkening_attempt:
+        if value < 0:
+            actually_darkened_color.append(0)
+        else:
+            actually_darkened_color.append(value)
+
+    return actually_darkened_color
+
 def generate_image(form_data, img_width, path_to_save_to):
     """Generate Square-1 image using `form_data`."""
     squan = Square1()
@@ -47,7 +59,7 @@ def generate_image(form_data, img_width, path_to_save_to):
     top_center_coord = [center_coord[0], padding+half_diag_length]
     bottom_center_coord = [center_coord[0], img_height-(padding+half_diag_length)]
 
-    border_thickness = int((1/90)*img_width)
+    border_thickness = int((1/100)*img_width)
 
     edge_vector = pg.math.Vector2(-half_edge_length, piece_height)
     half_diag_vector = pg.math.Vector2(-cube_side_length/2, cube_side_length/2)
@@ -153,12 +165,17 @@ def generate_image(form_data, img_width, path_to_save_to):
     if form_data["scheme"] != "Normal":
         left_eq_color = shape_color
         right_eq_color = shape_color
+        left_border_color = border_color
+        right_border_color = border_color
     else:
         left_eq_color = front_color
+        left_border_color = front_color
         right_eq_color = front_color
+        right_border_color = front_color
 
         if squan.equator_flipped:
             right_eq_color = back_color
+            right_border_color = back_color
 
     pg.draw.polygon(
         window,
@@ -172,7 +189,7 @@ def generate_image(form_data, img_width, path_to_save_to):
     )
     pg.draw.polygon(
         window,
-        border_color,
+        darken(left_border_color),
         [
             (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
             (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
@@ -195,7 +212,7 @@ def generate_image(form_data, img_width, path_to_save_to):
         )
         pg.draw.polygon(
             window,
-            border_color,
+            darken(right_border_color),
             [
                 (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
                 (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
@@ -217,7 +234,7 @@ def generate_image(form_data, img_width, path_to_save_to):
         )
         pg.draw.polygon(
             window,
-            border_color,
+            darken(right_border_color),
             [
                 (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
                 (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),

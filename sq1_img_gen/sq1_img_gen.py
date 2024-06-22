@@ -11,13 +11,11 @@ class FormState(rx.State):
     e_layer: bool = True
     d_layer: bool = True
     img_src: str = "/image.png"
-    loading: bool = False
 
     def reload_image(self, src):
         self.img_src = src
 
     async def handle_submit(self, form_data: dict):
-        self.loading = True
 
         new_img_src = f"/image_v_{int(time.time())}.png"
         generate_image(form_data, 1000, new_img_src)
@@ -29,8 +27,6 @@ class FormState(rx.State):
         await asyncio.sleep(1)
 
         os.remove("assets"+new_img_src)
-
-        self.loading = False
 
     def change_U(self):
         self.u_layer = not self.u_layer
@@ -78,7 +74,7 @@ def index():
                                             ),
 
                                             side="right",
-                                            align="center"
+                                            align="center",
                                         ),
                                     ),
                                 ),
@@ -125,22 +121,9 @@ def index():
                                         rx.text("Do not include bottom layer"),
                                     ),
                                 ),
-                                rx.accordion.root(  # probably replace this with something else, i want to avoid fix_arrow.css (ideally)
-                                    rx.accordion.item(
-                                        header="Advanced Settings",
-                                        content=rx.center(
-                                            rx.text("you'll eventually be able to edit color scheme, number pieces, other stuff"),
-
-                                            color=rx.color_mode_cond(light="#000000", dark="#FFFFFF"),
-                                        ),
-                                    ),
-
-                                    collapsible=True,
-                                    variant="ghost",
-                                ),
                                 rx.cond(
                                     FormState.u_layer | FormState.e_layer | FormState.d_layer,
-                                    rx.button(rx.icon("image"), "Generate", type="submit", margin_top="20px", size="3", loading=FormState.loading),
+                                    rx.button(rx.icon("image"), "Generate", type="submit", margin_top="20px", size="3"),
                                     rx.button(rx.icon("image"), "Generate", margin_top="20px", size="3", disabled=True, variant="outline"),
                                 ),
                             ),
@@ -155,7 +138,7 @@ def index():
 
             rx.vstack(
                 rx.heading("Output"),
-                rx.image(src=FormState.img_src, width="200px", height="auto", loading=FormState.loading),
+                rx.image(src=FormState.img_src, width="200px", height="auto"),
             ),
         ),
 
