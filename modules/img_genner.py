@@ -66,7 +66,7 @@ def generate_image(form_data, img_width, path_to_save_to):
 
     # initialize
     pg.init()
-    window = pg.display.set_mode(img_size)
+    window = pg.Surface(img_size). # check if it works, otherwise use pg.display.set_mode(img_size)
     window.fill((255, 255, 255))
 
     # draw top
