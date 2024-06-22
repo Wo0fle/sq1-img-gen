@@ -1,12 +1,7 @@
-import pygame as pg
+import drawsvg as draw
 import math
 from virtual_sq1 import Square1
 from modules.color_scheme import get_color
-
-
-def center(vector, new_center):
-    "Returns a new vector centered at `new_center`."
-    return [new_center[0]+vector[0], new_center[1]+vector[1]]
 
 
 def darken(color):
@@ -19,11 +14,15 @@ def darken(color):
         else:
             actually_darkened_color.append(value)
 
-    return actually_darkened_color
+    return tuple(actually_darkened_color)
 
 
 def generate_image(form_data, img_width, path_to_save_to):
-    """Generate Square-1 image using `form_data`."""
+    """
+    Generate Square-1 image of width `img_width` (in pixels)
+    using `form_data` and save to "assets" + `path_to_save_to`.
+    """
+
     squan = Square1()
 
     if form_data["input_type"] == "Case":
@@ -47,33 +46,35 @@ def generate_image(form_data, img_width, path_to_save_to):
     color_list = [front_color, left_color, back_color, right_color]
 
     img_height = img_width * 2
-    img_size = img_width, img_height
     padding = img_width // 9
 
     cube_side_length = img_width - 4*padding
     half_edge_length = (cube_side_length/2)*(math.tan(15*(math.pi/180)))
-    piece_height = (cube_side_length/2)
+    edge_height = (cube_side_length/2)
     half_diag_length = cube_side_length*math.sqrt(2)*0.5
-    corner_side_length = piece_height - half_edge_length
+    corner_side_length = edge_height - half_edge_length
 
-    center_coord = [i/2 for i in img_size]
-    top_center_coord = [center_coord[0], padding+half_diag_length]
-    bottom_center_coord = [center_coord[0], img_height-(padding+half_diag_length)]
+    top_center_coord = [0, -half_diag_length]
+    bottom_center_coord = [0, half_diag_length]
 
-    border_thickness = int((1/100)*img_width)
+    border_thickness = int((1/175)*img_width)
 
-    edge_vector = pg.math.Vector2(-half_edge_length, piece_height)
-    half_diag_vector = pg.math.Vector2(-cube_side_length/2, cube_side_length/2)
+    edge_vector = [-half_edge_length, edge_height]
+    half_diag_vector = [-cube_side_length/2, cube_side_length/2]
 
-    # initialize
-    pg.init()
-    window = pg.display.set_mode(img_size)
-    window.fill((255, 255, 255))
+
+    # init
+    d = draw.Drawing(img_width, img_height, origin='center')
+
+    d.append(draw.Circle(0, 0, 10))
 
     # draw top
     rotate_by = 0
 
     for piece in squan.top.__str__():
+        translate = f"translate(0,{-cube_side_length})"
+        rotation= f"rotate({rotate_by})"
+
         if piece in "ABCDEFGH":
             if form_data["scheme"] != "Shape":
                 if piece in "ABCD":
@@ -83,43 +84,28 @@ def generate_image(form_data, img_width, path_to_save_to):
             else:
                 current_color = shape_color
 
-            pg.draw.polygon(
-                window,
-                current_color,
-                [
-                    top_center_coord,
-                    center(edge_vector.rotate(rotate_by), top_center_coord),
-                    center(half_diag_vector.rotate(rotate_by), top_center_coord),
-                    center(edge_vector.rotate(rotate_by+60), top_center_coord),
-                ]
-            )
-            pg.draw.polygon(
-                window,
-                border_color,
-                [
-                    top_center_coord,
-                    center(edge_vector.rotate(rotate_by), top_center_coord),
-                    center(half_diag_vector.rotate(rotate_by), top_center_coord),
-                    center(edge_vector.rotate(rotate_by+60), top_center_coord),
-                ],
-                border_thickness
-            )
+            d.append(draw.Lines(0, 0,
+                                edge_vector[0], edge_vector[1],
+                                half_diag_vector[0], half_diag_vector[1],
+                                half_diag_vector[0], -edge_vector[0],
+                                close=True,
+                                fill=f"rgb{current_color}",
+                                stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                transform=f"{translate} {rotation}"))
 
             if form_data["scheme"] == "Normal":
-                pg.draw.line(
-                    window,
-                    get_color(color_list, piece),
-                    center(edge_vector.rotate(rotate_by), top_center_coord),
-                    center(half_diag_vector.rotate(rotate_by), top_center_coord),
-                    2*border_thickness,
-                )
-                pg.draw.line(
-                    window,
-                    get_color(color_list, piece, 1),
-                    center(half_diag_vector.rotate(rotate_by), top_center_coord),
-                    center(edge_vector.rotate(rotate_by+60), top_center_coord),
-                    2*border_thickness,
-                )
+                d.append(draw.Line(
+                                edge_vector[0], edge_vector[1],
+                                half_diag_vector[0], half_diag_vector[1],
+                                stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
+                                transform=f"{translate} {rotation}"
+                            ))
+                d.append(draw.Line(
+                                half_diag_vector[0], half_diag_vector[1],
+                                half_diag_vector[0], -edge_vector[0],
+                                stroke=f"rgb{get_color(color_list, piece, 1)}", stroke_width=3*border_thickness,
+                                transform=f"{translate} {rotation}"
+                            ))
 
             rotate_by += 60
         else:
@@ -131,34 +117,20 @@ def generate_image(form_data, img_width, path_to_save_to):
             else:
                 current_color = shape_color
 
-            pg.draw.polygon(
-                window,
-                current_color,
-                [
-                    top_center_coord,
-                    center(edge_vector.rotate(rotate_by), top_center_coord),
-                    center(edge_vector.rotate(rotate_by+30), top_center_coord),
-                ]
-            )
-            pg.draw.polygon(
-                window,
-                border_color,
-                [
-                    top_center_coord,
-                    center(edge_vector.rotate(rotate_by), top_center_coord),
-                    center(edge_vector.rotate(rotate_by+30), top_center_coord),
-                ],
-                border_thickness
-            )
+            d.append(draw.Lines(0, 0,
+                                edge_vector[0], edge_vector[1],
+                                edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
+                                close=True,
+                                fill=f"rgb{current_color}",
+                                stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                transform=f"{translate} {rotation}"))
 
             if form_data["scheme"] == "Normal":
-                pg.draw.line(
-                    window,
-                    get_color(color_list, piece),
-                    center(edge_vector.rotate(rotate_by), top_center_coord),
-                    center(edge_vector.rotate(rotate_by+30), top_center_coord),
-                    2*border_thickness,
-                )
+                d.append(draw.Line(
+                                    edge_vector[0], edge_vector[1],
+                                    edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
+                                    stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
+                                    transform=f"{translate} {rotation}"))
 
             rotate_by += 30
 
@@ -178,77 +150,29 @@ def generate_image(form_data, img_width, path_to_save_to):
             right_eq_color = back_color
             right_border_color = back_color
 
-    pg.draw.polygon(
-        window,
-        left_eq_color,
-        [
-            (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
-            (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
-            (center_coord[0]-piece_height, center_coord[1]+half_edge_length),
-            (center_coord[0]-piece_height, center_coord[1]-half_edge_length),
-        ],
-    )
-    pg.draw.polygon(
-        window,
-        darken(left_border_color),
-        [
-            (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
-            (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
-            (center_coord[0]-piece_height, center_coord[1]+half_edge_length),
-            (center_coord[0]-piece_height, center_coord[1]-half_edge_length),
-        ],
-        border_thickness,
-    )
+    d.append(draw.Rectangle(-cube_side_length/2, -half_edge_length,
+                            corner_side_length, (2*half_edge_length),
+                            fill=f"rgb{left_eq_color}",
+                            stroke=f"rgb{darken(left_border_color)}", stroke_width=border_thickness))
 
     if not squan.equator_flipped:
-        pg.draw.polygon(
-            window,
-            right_eq_color,
-            [
-                (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
-                (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
-                (center_coord[0]+piece_height, center_coord[1]+half_edge_length),
-                (center_coord[0]+piece_height, center_coord[1]-half_edge_length),
-            ],
-        )
-        pg.draw.polygon(
-            window,
-            darken(right_border_color),
-            [
-                (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
-                (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
-                (center_coord[0]+piece_height, center_coord[1]+half_edge_length),
-                (center_coord[0]+piece_height, center_coord[1]-half_edge_length),
-            ],
-            border_thickness,
-        )
+        d.append(draw.Rectangle(-half_edge_length, -half_edge_length,
+                            corner_side_length+(2*half_edge_length), (2*half_edge_length),
+                            fill=f"rgb{right_eq_color}",
+                            stroke=f"rgb{darken(right_border_color)}", stroke_width=border_thickness))
     else:
-        pg.draw.polygon(
-            window,
-            right_eq_color,
-            [
-                (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
-                (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
-                (center_coord[0]-half_edge_length+corner_side_length, center_coord[1]+half_edge_length),
-                (center_coord[0]-half_edge_length+corner_side_length, center_coord[1]-half_edge_length),
-            ],
-        )
-        pg.draw.polygon(
-            window,
-            darken(right_border_color),
-            [
-                (center_coord[0]-half_edge_length, center_coord[1]-half_edge_length),
-                (center_coord[0]-half_edge_length, center_coord[1]+half_edge_length),
-                (center_coord[0]-half_edge_length+corner_side_length, center_coord[1]+half_edge_length),
-                (center_coord[0]-half_edge_length+corner_side_length, center_coord[1]-half_edge_length),
-            ],
-            border_thickness,
-        )
+        d.append(draw.Rectangle(-half_edge_length, -half_edge_length,
+                            corner_side_length, (2*half_edge_length),
+                            fill=f"rgb{right_eq_color}",
+                            stroke=f"rgb{darken(right_border_color)}", stroke_width=border_thickness))
 
-    # draw bottom
+    # draw top
     rotate_by = 150
 
     for piece in squan.bottom.__str__():
+        translate = f"translate(0,{cube_side_length})"
+        rotation= f"rotate({rotate_by})"
+
         if piece in "ABCDEFGH":
             if form_data["scheme"] != "Shape":
                 if piece in "ABCD":
@@ -258,43 +182,28 @@ def generate_image(form_data, img_width, path_to_save_to):
             else:
                 current_color = shape_color
 
-            pg.draw.polygon(
-                window,
-                current_color,
-                [
-                    bottom_center_coord,
-                    center(edge_vector.rotate(rotate_by), bottom_center_coord),
-                    center(half_diag_vector.rotate(rotate_by), bottom_center_coord),
-                    center(edge_vector.rotate(rotate_by+60), bottom_center_coord),
-                ]
-            )
-            pg.draw.polygon(
-                window,
-                border_color,
-                [
-                    bottom_center_coord,
-                    center(edge_vector.rotate(rotate_by), bottom_center_coord),
-                    center(half_diag_vector.rotate(rotate_by), bottom_center_coord),
-                    center(edge_vector.rotate(rotate_by+60), bottom_center_coord),
-                ],
-                border_thickness
-            )
+            d.append(draw.Lines(0, 0,
+                                edge_vector[0], edge_vector[1],
+                                half_diag_vector[0], half_diag_vector[1],
+                                half_diag_vector[0], -edge_vector[0],
+                                close=True,
+                                fill=f"rgb{current_color}",
+                                stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                transform=f"{translate} {rotation}"))
 
             if form_data["scheme"] == "Normal":
-                pg.draw.line(
-                    window,
-                    get_color(color_list, piece),
-                    center(edge_vector.rotate(rotate_by), bottom_center_coord),
-                    center(half_diag_vector.rotate(rotate_by), bottom_center_coord),
-                    2*border_thickness,
-                )
-                pg.draw.line(
-                    window,
-                    get_color(color_list, piece, 1),
-                    center(half_diag_vector.rotate(rotate_by), bottom_center_coord),
-                    center(edge_vector.rotate(rotate_by+60), bottom_center_coord),
-                    2*border_thickness,
-                )
+                d.append(draw.Line(
+                                edge_vector[0], edge_vector[1],
+                                half_diag_vector[0], half_diag_vector[1],
+                                stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
+                                transform=f"{translate} {rotation}"
+                            ))
+                d.append(draw.Line(
+                                half_diag_vector[0], half_diag_vector[1],
+                                half_diag_vector[0], -edge_vector[0],
+                                stroke=f"rgb{get_color(color_list, piece, 1)}", stroke_width=3*border_thickness,
+                                transform=f"{translate} {rotation}"
+                            ))
 
             rotate_by += 60
         else:
@@ -306,38 +215,21 @@ def generate_image(form_data, img_width, path_to_save_to):
             else:
                 current_color = shape_color
 
-            pg.draw.polygon(
-                window,
-                current_color,
-                [
-                    bottom_center_coord,
-                    center(edge_vector.rotate(rotate_by), bottom_center_coord),
-                    center(edge_vector.rotate(rotate_by+30), bottom_center_coord),
-                ]
-            )
-            pg.draw.polygon(
-                window,
-                border_color,
-                [
-                    bottom_center_coord,
-                    center(edge_vector.rotate(rotate_by), bottom_center_coord),
-                    center(edge_vector.rotate(rotate_by+30), bottom_center_coord),
-                ],
-                border_thickness
-            )
+            d.append(draw.Lines(0, 0,
+                                edge_vector[0], edge_vector[1],
+                                edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
+                                close=True,
+                                fill=f"rgb{current_color}",
+                                stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                transform=f"{translate} {rotation}"))
 
             if form_data["scheme"] == "Normal":
-                pg.draw.line(
-                    window,
-                    get_color(color_list, piece),
-                    center(edge_vector.rotate(rotate_by), bottom_center_coord),
-                    center(edge_vector.rotate(rotate_by+30), bottom_center_coord),
-                    2*border_thickness,
-                )
+                d.append(draw.Line(
+                                    edge_vector[0], edge_vector[1],
+                                    edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
+                                    stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
+                                    transform=f"{translate} {rotation}"))
 
             rotate_by += 30
 
-    # finalize
-    pg.display.update()
-    pg.image.save(window, "assets"+path_to_save_to)
-    pg.quit()
+    d.save_svg("assets"+path_to_save_to)

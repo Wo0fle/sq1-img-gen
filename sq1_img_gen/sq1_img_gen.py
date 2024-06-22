@@ -10,14 +10,16 @@ class FormState(rx.State):
     u_layer: bool = True
     e_layer: bool = True
     d_layer: bool = True
-    img_src: str = "/image.png"
+    img_src: str = "/image.svg"
 
     def reload_image(self, src):
         self.img_src = src
 
-    async def handle_submit(self, form_data: dict):
+    def img_location(self):
+        return str(self.img_src)
 
-        new_img_src = f"/image_v_{int(time.time())}.png"
+    async def handle_submit(self, form_data: dict):
+        new_img_src = f"/image_v_{int(time.time())}.svg"
         generate_image(form_data, 1000, new_img_src)
 
         await asyncio.sleep(1)
@@ -47,6 +49,7 @@ def index():
         rx.hstack(
             rx.center(
                 rx.vstack(
+                    rx.heading("Input"),
                     rx.form.root(
                         rx.center(
                             rx.vstack(
@@ -138,7 +141,7 @@ def index():
 
             rx.vstack(
                 rx.heading("Output"),
-                rx.image(src=FormState.img_src, width="200px", height="auto"),
+                rx.image(src=FormState.img_src, width="200px", height="auto")
             ),
         ),
 
