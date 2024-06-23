@@ -39,17 +39,17 @@ class FormState(rx.State):
     def change_D(self):
         self.d_layer = not self.d_layer
 
-
+@rx.page(title="Seby's Square-1 Image Generator")
 def index():
     return rx.container(
         rx.color_mode.button(position="top-right"),
 
-        rx.center(rx.heading("Seby's Square-1 Image Generator", margin_bottom="30px"),),
+        rx.center(rx.heading("Seby's Square-1 Image Generator"), margin_bottom="50px"),
 
         rx.hstack(
             rx.center(
                 rx.vstack(
-                    rx.heading("Input"),
+                    rx.heading("Input", margin_bottom="30px"),
                     rx.form.root(
                         rx.center(
                             rx.vstack(
@@ -136,12 +136,16 @@ def index():
                         on_submit=FormState.handle_submit,
                         reset_on_submit=False,
                     ),
+
+                margin_bottom="30px",
                 ),
             ),
 
             rx.vstack(
                 rx.heading("Output"),
-                rx.image(src=FormState.img_src, width="200px", height="auto")
+                rx.image(src=FormState.img_src, width="200px", height="auto"),
+
+                margin_top=0
             ),
         ),
 
