@@ -89,40 +89,28 @@ def index():
                                     spacing="5"
                                 ),
                                 rx.hstack(
-                                    rx.switch(
+                                    rx.checkbox(
                                         name="include_U",
                                         on_change=FormState.change_U(),
                                         default_checked=True,
                                     ),
-                                    rx.cond(
-                                        FormState.u_layer,
-                                        rx.text("Include top layer"),
-                                        rx.text("Do not include top layer"),
-                                    ),
+                                    rx.text("Include top layer")
                                 ),
                                 rx.hstack(
-                                    rx.switch(
+                                    rx.checkbox(
                                         name="include_E",
                                         on_change=FormState.change_E(),
                                         default_checked=True,
                                     ),
-                                    rx.cond(
-                                        FormState.e_layer,
-                                        rx.text("Include equator"),
-                                        rx.text("Do not include equator"),
-                                    ),
+                                    rx.text("Include equator")
                                 ),
                                 rx.hstack(
-                                    rx.switch(
+                                    rx.checkbox(
                                         name="include_D",
                                         on_change=FormState.change_D(),
                                         default_checked=True,
                                     ),
-                                    rx.cond(
-                                        FormState.d_layer,
-                                        rx.text("Include bottom layer"),
-                                        rx.text("Do not include bottom layer"),
-                                    ),
+                                    rx.text("Include bottom layer")
                                 ),
                                 rx.cond(
                                     FormState.u_layer | FormState.e_layer | FormState.d_layer,
