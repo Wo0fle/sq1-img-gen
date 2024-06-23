@@ -4,19 +4,6 @@ from virtual_sq1 import Square1
 from modules.color_scheme import get_color
 
 
-def darken(color):
-    darkening_attempt = [i-100 for i in color]
-    actually_darkened_color = []
-
-    for value in darkening_attempt:
-        if value < 0:
-            actually_darkened_color.append(0)
-        else:
-            actually_darkened_color.append(value)
-
-    return tuple(actually_darkened_color)
-
-
 def generate_image(form_data, img_width, path_to_save_to):
     """
     Generate Square-1 image of width `img_width` (in pixels)
@@ -43,9 +30,12 @@ def generate_image(form_data, img_width, path_to_save_to):
 
     shape_color = (90, 90, 90)
 
+    extension_factor = 1.15
+    border_thickness = int((1/165)*img_width)
+
     color_list = [front_color, left_color, back_color, right_color]
 
-    img_height = img_width * 2
+    img_height = img_width * 2.15
     padding = img_width // 9
 
     cube_side_length = img_width - 4*padding
@@ -53,8 +43,6 @@ def generate_image(form_data, img_width, path_to_save_to):
     edge_height = (cube_side_length/2)
     half_diag_length = cube_side_length*math.sqrt(2)*0.5
     corner_side_length = edge_height - half_edge_length
-
-    border_thickness = int((1/175)*img_width)
 
     edge_vector = [-half_edge_length, edge_height]
     half_diag_vector = [-cube_side_length/2, cube_side_length/2]
@@ -90,18 +78,24 @@ def generate_image(form_data, img_width, path_to_save_to):
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
-                    d.append(draw.Line(
+                    d.append(draw.Lines(
                                     edge_vector[0], edge_vector[1],
+                                    edge_vector[0]*extension_factor, edge_vector[1]*extension_factor,
+                                    half_diag_vector[0]*extension_factor, half_diag_vector[1]*extension_factor,
                                     half_diag_vector[0], half_diag_vector[1],
-                                    stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
-                                    transform=f"{translate} {rotation}"
-                                ))
-                    d.append(draw.Line(
+                                    close=True,
+                                    fill=f"rgb{get_color(color_list, piece)}",
+                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    transform=f"{translate} {rotation}"))
+                    d.append(draw.Lines(
                                     half_diag_vector[0], half_diag_vector[1],
+                                    half_diag_vector[0]*extension_factor, half_diag_vector[1]*extension_factor,
+                                    half_diag_vector[0]*extension_factor, -edge_vector[0]*extension_factor,
                                     half_diag_vector[0], -edge_vector[0],
-                                    stroke=f"rgb{get_color(color_list, piece, 1)}", stroke_width=3*border_thickness,
-                                    transform=f"{translate} {rotation}"
-                                ))
+                                    close=True,
+                                    fill=f"rgb{get_color(color_list, piece, 1)}",
+                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    transform=f"{translate} {rotation}"))
 
                 rotate_by += 60
             else:
@@ -122,11 +116,15 @@ def generate_image(form_data, img_width, path_to_save_to):
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
-                    d.append(draw.Line(
-                                        edge_vector[0], edge_vector[1],
-                                        edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
-                                        stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
-                                        transform=f"{translate} {rotation}"))
+                    d.append(draw.Lines(
+                                    edge_vector[0], edge_vector[1],
+                                    edge_vector[0]*extension_factor, edge_vector[1]*extension_factor,
+                                    extension_factor*(edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180))), extension_factor*(edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180))),
+                                    edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
+                                    close=True,
+                                    fill=f"rgb{get_color(color_list, piece)}",
+                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    transform=f"{translate} {rotation}"))
 
                 rotate_by += 30
 
@@ -135,35 +133,30 @@ def generate_image(form_data, img_width, path_to_save_to):
         if form_data["scheme"] != "Normal":
             left_eq_color = shape_color
             right_eq_color = shape_color
-            left_border_color = border_color
-            right_border_color = border_color
         else:
             left_eq_color = front_color
-            left_border_color = front_color
             right_eq_color = front_color
-            right_border_color = front_color
 
             if squan.equator_flipped:
                 right_eq_color = back_color
-                right_border_color = back_color
 
         d.append(draw.Rectangle(-cube_side_length/2, -half_edge_length,
                                 corner_side_length, (2*half_edge_length),
                                 fill=f"rgb{left_eq_color}",
-                                stroke=f"rgb{darken(left_border_color)}", stroke_width=border_thickness))
+                                stroke=f"rgb{border_color}", stroke_width=border_thickness))
 
         if not squan.equator_flipped:
             d.append(draw.Rectangle(-half_edge_length, -half_edge_length,
                                 corner_side_length+(2*half_edge_length), (2*half_edge_length),
                                 fill=f"rgb{right_eq_color}",
-                                stroke=f"rgb{darken(right_border_color)}", stroke_width=border_thickness))
+                                stroke=f"rgb{border_color}", stroke_width=border_thickness))
         else:
             d.append(draw.Rectangle(-half_edge_length, -half_edge_length,
                                 corner_side_length, (2*half_edge_length),
                                 fill=f"rgb{right_eq_color}",
-                                stroke=f"rgb{darken(right_border_color)}", stroke_width=border_thickness))
+                                stroke=f"rgb{border_color}", stroke_width=border_thickness))
 
-    # draw top
+    # draw bottom
     rotate_by = 150
 
     if form_data.get("include_D") == "on":
@@ -190,18 +183,24 @@ def generate_image(form_data, img_width, path_to_save_to):
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
-                    d.append(draw.Line(
+                    d.append(draw.Lines(
                                     edge_vector[0], edge_vector[1],
+                                    edge_vector[0]*extension_factor, edge_vector[1]*extension_factor,
+                                    half_diag_vector[0]*extension_factor, half_diag_vector[1]*extension_factor,
                                     half_diag_vector[0], half_diag_vector[1],
-                                    stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
-                                    transform=f"{translate} {rotation}"
-                                ))
-                    d.append(draw.Line(
+                                    close=True,
+                                    fill=f"rgb{get_color(color_list, piece)}",
+                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    transform=f"{translate} {rotation}"))
+                    d.append(draw.Lines(
                                     half_diag_vector[0], half_diag_vector[1],
+                                    half_diag_vector[0]*extension_factor, half_diag_vector[1]*extension_factor,
+                                    half_diag_vector[0]*extension_factor, -edge_vector[0]*extension_factor,
                                     half_diag_vector[0], -edge_vector[0],
-                                    stroke=f"rgb{get_color(color_list, piece, 1)}", stroke_width=3*border_thickness,
-                                    transform=f"{translate} {rotation}"
-                                ))
+                                    close=True,
+                                    fill=f"rgb{get_color(color_list, piece, 1)}",
+                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    transform=f"{translate} {rotation}"))
 
                 rotate_by += 60
             else:
@@ -222,11 +221,15 @@ def generate_image(form_data, img_width, path_to_save_to):
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
-                    d.append(draw.Line(
-                                        edge_vector[0], edge_vector[1],
-                                        edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
-                                        stroke=f"rgb{get_color(color_list, piece)}", stroke_width=3*border_thickness,
-                                        transform=f"{translate} {rotation}"))
+                    d.append(draw.Lines(
+                                    edge_vector[0], edge_vector[1],
+                                    edge_vector[0]*extension_factor, edge_vector[1]*extension_factor,
+                                    extension_factor*(edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180))), extension_factor*(edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180))),
+                                    edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
+                                    close=True,
+                                    fill=f"rgb{get_color(color_list, piece)}",
+                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    transform=f"{translate} {rotation}"))
 
                 rotate_by += 30
 

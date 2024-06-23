@@ -132,8 +132,6 @@ def index():
             rx.vstack(
                 rx.heading("Output"),
                 rx.image(src=FormState.img_src, width="200px", height="auto"),
-
-                margin_top=0
             ),
         ),
 
