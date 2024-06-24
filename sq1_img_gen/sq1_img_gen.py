@@ -1,7 +1,7 @@
 import reflex as rx
 import time
-import asyncio
 import os
+from virtual_sq1 import Square1
 from modules.img_genner import generate_image
 
 
@@ -10,25 +10,35 @@ class FormState(rx.State):
     u_layer: bool = True
     e_layer: bool = True
     d_layer: bool = True
-    img_src: str = "/image.svg"
+    img_src: str = "/A1B2C3D45E6F7G8H.svg"
 
     def reload_image(self, src):
         self.img_src = src
 
-    def img_location(self):
-        return str(self.img_src)
+    def handle_submit(self, form_data: dict):
+        squan = Square1()
 
-    async def handle_submit(self, form_data: dict):
-        new_img_src = f"/image_v_{int(time.time())}.svg"
-        generate_image(form_data, 1000, new_img_src)
+        if form_data["input_type"] == "Case":
+            squan.apply_alg(form_data["text_input"], True)
+        elif form_data["input_type"] == "Algorithm":
+            squan.apply_alg(form_data["text_input"])
+        else:
+            squan.apply_state(form_data["text_input"])
 
-        await asyncio.sleep(1)
+        new_img_src = f"/{squan.top.__str__()}{squan.bottom.__str__()}_{int(time.time())}.svg"
+        generate_image(form_data, 100, new_img_src)
 
-        self.reload_image(new_img_src)
+        self.img_src = new_img_src
 
-        await asyncio.sleep(1)
-
-        os.remove("assets"+new_img_src)
+        loaded = False
+        
+        while not loaded:
+            time.sleep(1)
+            try:
+                os.remove("assets" + new_img_src)
+                loaded = True
+            except PermissionError or FileNotFoundError:
+                pass
 
     def change_U(self):
         self.u_layer = not self.u_layer
@@ -86,7 +96,8 @@ def index():
                                     default_value="Normal",
                                     name="scheme",
                                     direction="row",
-                                    spacing="5"
+                                    spacing="5",
+                                    margin_bottom="10px"
                                 ),
                                 rx.hstack(
                                     rx.checkbox(
@@ -112,6 +123,14 @@ def index():
                                     ),
                                     rx.text("Include bottom layer")
                                 ),
+                                rx.radio(
+                                    ["Vertical", "Horizontal"],
+                                    default_value="Vertical",
+                                    name="img_orientation",
+                                    direction="row",
+                                    spacing="2",
+                                    margin_top="10px"
+                                ),
                                 rx.cond(
                                     FormState.u_layer | FormState.e_layer | FormState.d_layer,
                                     rx.button(rx.icon("image"), "Generate", type="submit", margin_top="20px", size="3"),
@@ -127,12 +146,18 @@ def index():
 
                 margin_bottom="30px",
                 ),
+            
+            margin_top=0
             ),
 
             rx.vstack(
-                rx.heading("Output"),
-                rx.image(src=FormState.img_src, width="200px", height="auto"),
+                rx.heading("Output", margin_top=0),
+                rx.image(src=FormState.img_src),
+
+                margin_top=0
             ),
+        
+        margin_top=0,
         ),
 
         padding="20px",
@@ -149,6 +174,5 @@ app = rx.App(
     theme=rx.theme(appearance="dark"),
     accent_color="blue",
     style=all_is_margin_auto,
-    stylesheets=["/fix_arrow.css"]
 )
 app.add_page(index)
