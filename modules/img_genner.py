@@ -1,14 +1,15 @@
+import reflex as rx
 import drawsvg as draw
 import math
 from virtual_sq1 import Square1
 from modules.color_scheme import get_color
 
 
-def generate_image(form_data, cube_side_length, path_to_save_to):
+def generate_image(form_data, cube_side_length):
     """
     Generates the Square-1 image with a cube of
     side length `cube_side_length` (in pixels) using
-    `form_data` and saves to "assets" + `path_to_save_to`.
+    `form_data` and saves to `path_to_save_to`.
     """
 
     squan = Square1()
@@ -257,4 +258,8 @@ def generate_image(form_data, cube_side_length, path_to_save_to):
 
                 rotate_by += 30
 
-    d.save_svg("assets"+path_to_save_to)
+    upload_dir = f"{rx.get_upload_dir()}/{squan.top}{squan.bottom}.svg"
+
+    d.save_svg(upload_dir)
+
+    return upload_dir

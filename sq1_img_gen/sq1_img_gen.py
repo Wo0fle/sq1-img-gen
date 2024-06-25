@@ -10,35 +10,22 @@ class FormState(rx.State):
     u_layer: bool = True
     e_layer: bool = True
     d_layer: bool = True
-    img_src: str = "/A1B2C3D45E6F7G8H.svg"
-
-    def reload_image(self, src):
-        self.img_src = src
+    img_src: str = "A1B2C3D45E6F7G8H.svg"
 
     def handle_submit(self, form_data: dict):
-        squan = Square1()
+        upload_dir = generate_image(form_data, 100)
 
-        if form_data["input_type"] == "Case":
-            squan.apply_alg(form_data["text_input"], True)
-        elif form_data["input_type"] == "Algorithm":
-            squan.apply_alg(form_data["text_input"])
-        else:
-            squan.apply_state(form_data["text_input"])
+        self.img_src = upload_dir
 
-        new_img_src = f"/{squan.top.__str__()}{squan.bottom.__str__()}_{int(time.time())}.svg"
-        generate_image(form_data, 100, new_img_src)
-
-        self.img_src = new_img_src
-
-        loaded = False
+        """loaded = False
         
         while not loaded:
             time.sleep(1)
             try:
-                os.remove("assets" + new_img_src)
+                os.remove(self.img_src)
                 loaded = True
             except PermissionError or FileNotFoundError:
-                pass
+                pass"""
 
     def change_U(self):
         self.u_layer = not self.u_layer
