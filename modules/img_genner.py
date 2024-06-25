@@ -1,6 +1,7 @@
 import reflex as rx
 import drawsvg as draw
 import math
+import time
 from virtual_sq1 import Square1
 from modules.color_scheme import get_color
 
@@ -258,8 +259,8 @@ def generate_image(form_data, cube_side_length):
 
                 rotate_by += 30
 
-    upload_dir = f"{rx.get_upload_dir()}/{squan.top}{squan.bottom}.svg"
+    filename = f"{squan.top}{squan.bottom}_{int(time.time())}.svg"
 
-    d.save_svg(upload_dir)
+    d.save_svg(f"{rx.get_upload_dir()}/{filename}")
 
-    return upload_dir
+    return filename

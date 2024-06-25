@@ -10,23 +10,14 @@ class FormState(rx.State):
     u_layer: bool = True
     e_layer: bool = True
     d_layer: bool = True
-    img_src: str = "A1B2C3D45E6F7G8H.svg"
+    img_src = "A1B2C3D45E6F7G8H.svg"
 
     def handle_submit(self, form_data: dict):
-        upload_dir = generate_image(form_data, 100)
+        filename = generate_image(form_data, 100)
 
-        self.img_src = upload_dir
-
-        """loaded = False
-        
-        while not loaded:
-            time.sleep(1)
-            try:
-                os.remove(self.img_src)
-                loaded = True
-            except PermissionError or FileNotFoundError:
-                pass"""
-
+        self.img_src = rx.get_upload_url(filename)
+        # self.img_src = rx.get_upload_dir() / filename 
+  
     def change_U(self):
         self.u_layer = not self.u_layer
 
