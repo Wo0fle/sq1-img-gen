@@ -38,7 +38,10 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 <br>
 
-6. Click <span style="border:3px solid blue;padding:5px;border-radius:10px">Generate</span> , and your generated image should appear on the right!
+6. Click the "**Generate**" button, and your generated image should appear on the right!
+    - Sometimes it takes a little bit of time to generate, so if it doesn't appear immediately, wait for a few seconds.
+    - Additionally, if there is an error with the input, it will generate an image of a solved Square-1. If you weren't expecting a solved Square-1, check your input for typos, and make sure you chose the correct input type.
+        - I am working on adding error messages, so errors should be more clear after I do that!
 
 <br>
 
@@ -48,9 +51,13 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 ### Advanced Settings:
 
-- **Custom color scheme:** In the works!
-- **Custom extension factor:** In the works!
-- **Custom border color:** In the works!
+- **Custom colors:** Input any valid RGB value into the text box to change that part of the image to your desired color!
+    - This includes all the sides (for Normal and Orientation renders), the border (for all renders), and the shape color (for equator in Orietation render and everything in Shape render).
+- **Custom extension factor:** Input any numerical value to change how far the pieces extend into/out of the top/bottom sides!
+    - Values above 1 lead to the sides sticking out of the top/bottom. Values below 1 lead to the sides sticking into the top/bottom. A value of 1 leads to no visible side colors on the top/bottom layers (but you will be able to see them on the equator). Values below 0 lead to some weird-looking things that kind of look cool sometimes.
+
+<br><hr><br>
+
 - **Turning on/off slice indicator:** In the works!
 
 <br>
