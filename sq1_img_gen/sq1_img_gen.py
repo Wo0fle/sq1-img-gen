@@ -1,7 +1,4 @@
 import reflex as rx
-import time
-import os
-from virtual_sq1 import Square1
 from modules.img_genner import generate_image
 
 
@@ -10,13 +7,10 @@ class FormState(rx.State):
     u_layer: bool = True
     e_layer: bool = True
     d_layer: bool = True
-    img_src = "A1B2C3D45E6F7G8H.svg"
+    img: str = ""
 
     def handle_submit(self, form_data: dict):
-        filename = generate_image(form_data, 100)
-
-        self.img_src = rx.get_upload_url(filename)
-        # self.img_src = rx.get_upload_dir() / filename 
+        self.img = generate_image(form_data, 100)
   
     def change_U(self):
         self.u_layer = not self.u_layer
@@ -26,6 +20,7 @@ class FormState(rx.State):
 
     def change_D(self):
         self.d_layer = not self.d_layer
+
 
 @rx.page(title="Seby's Square-1 Image Generator")
 def index():
@@ -130,7 +125,7 @@ def index():
 
             rx.vstack(
                 rx.heading("Output", margin_top=0),
-                rx.image(src=FormState.img_src),
+                rx.image(src=rx.get_upload_url(FormState.img)),
 
                 margin_top=0
             ),
