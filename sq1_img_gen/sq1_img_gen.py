@@ -25,9 +25,9 @@ class FormState(rx.State):
 @rx.page(title="Seby's Square-1 Image Generator")
 def index():
     return rx.container(
-        rx.color_mode.button(position="top-right"),
+        rx.center(rx.heading("Seby's Square-1 Image Generator"), margin_bottom="10px"),
 
-        rx.center(rx.heading("Seby's Square-1 Image Generator"), margin_bottom="50px"),
+        rx.center(rx.link(rx.hstack("Need help?", rx.icon("circle-help")), href="https://github.com/Wo0fle/sq1-img-gen/blob/main/README.md", target="_blank"), margin_bottom="40px"),
 
         rx.hstack(
             rx.center(
@@ -50,9 +50,9 @@ def index():
                                         name="input_type",
                                         spacing="3",
                                     ),
-                                    rx.popover.root(
-                                        rx.popover.trigger(rx.icon("circle-help"), _hover={"cursor": "pointer"}),
-                                        rx.popover.content(
+                                    rx.dialog.root(
+                                        rx.dialog.trigger(rx.link(rx.icon("circle-help"), href="#")),
+                                        rx.dialog.content(
                                             rx.vstack(
                                                 rx.text(rx.text.strong("Case: "), "Your input will solve the Square-1 in the generated image."),
                                                 rx.text(rx.text.strong("Algorithm: "), "Your input will be applied to a solved Square-1 to generate the image."),
@@ -132,6 +132,8 @@ def index():
         
         margin_top=0,
         ),
+
+        rx.logo(), rx.color_mode.button(position="bottom-right"),
 
         padding="20px",
     )
