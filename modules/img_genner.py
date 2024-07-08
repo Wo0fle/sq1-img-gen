@@ -22,21 +22,21 @@ def generate_image(form_data, cube_side_length):
     else:
         squan.apply_state(form_data["text_input"])
 
-    border_color = (0, 0, 0)
+    border_color = form_data["bordercolor"]
 
-    top_color = (30, 30, 30)
-    bottom_color = (255, 255, 255)
-    front_color = (255, 0, 0)
-    back_color = (255, 165, 0)
-    left_color = (0, 73, 255)
-    right_color = (0, 255, 0)
+    top_color = form_data["topcolor"]
+    bottom_color = form_data["bottomcolor"]
+    front_color = form_data["frontcolor"]
+    back_color = form_data["backcolor"]
+    left_color = form_data["leftcolor"]
+    right_color = form_data["rightcolor"]
 
-    shape_color = (90, 90, 90)
+    shape_color = form_data["shapecolor"]
 
     img_width = cube_side_length * 2
     img_height = img_width * 2.15
 
-    extension_factor = 1.2
+    extension_factor = float(form_data["extensionfactor"])
     border_thickness = int((1/130)*img_width)
 
     color_list = [front_color, left_color, back_color, right_color]
@@ -66,10 +66,16 @@ def generate_image(form_data, cube_side_length):
     if form_data.get("include_U") == "on":
         translate = f"translate{u_coord}"
 
-        d.append(draw.Line(edge_vector[0]*1.5, edge_vector[1]*1.5,
-                            edge_vector[0]*-1.5, edge_vector[1]*-1.5,
-                            stroke=f"rgb{border_color}", stroke_width=border_thickness,
-                            transform=f"{translate}"))
+        if extension_factor >= 1 or extension_factor <= 1:
+            d.append(draw.Line(edge_vector[0]*(extension_factor*1.2), edge_vector[1]*(extension_factor*1.2),
+                                edge_vector[0]*-(extension_factor*1.2), edge_vector[1]*-(extension_factor*1.2),
+                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                transform=f"{translate}"))
+        else:
+            d.append(draw.Line(edge_vector[0]*1.2, edge_vector[1]*1.2,
+                                edge_vector[0]*-1.2, edge_vector[1]*-1.2,
+                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                transform=f"{translate}"))
         
         for piece in squan.top.__str__():
             rotation= f"rotate({rotate_by})"
@@ -88,8 +94,8 @@ def generate_image(form_data, cube_side_length):
                                     half_diag_vector[0], half_diag_vector[1],
                                     half_diag_vector[0], -edge_vector[0],
                                     close=True,
-                                    fill=f"rgb{current_color}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({current_color})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
@@ -99,8 +105,8 @@ def generate_image(form_data, cube_side_length):
                                     half_diag_vector[0]*extension_factor, half_diag_vector[1]*extension_factor,
                                     half_diag_vector[0], half_diag_vector[1],
                                     close=True,
-                                    fill=f"rgb{get_color(color_list, piece)}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({get_color(color_list, piece)})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
                     d.append(draw.Lines(
                                     half_diag_vector[0], half_diag_vector[1],
@@ -108,8 +114,8 @@ def generate_image(form_data, cube_side_length):
                                     half_diag_vector[0]*extension_factor, -edge_vector[0]*extension_factor,
                                     half_diag_vector[0], -edge_vector[0],
                                     close=True,
-                                    fill=f"rgb{get_color(color_list, piece, 1)}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({get_color(color_list, piece, 1)})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 rotate_by += 60
@@ -126,8 +132,8 @@ def generate_image(form_data, cube_side_length):
                                     edge_vector[0], edge_vector[1],
                                     edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
                                     close=True,
-                                    fill=f"rgb{current_color}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({current_color})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
@@ -137,8 +143,8 @@ def generate_image(form_data, cube_side_length):
                                     extension_factor*(edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180))), extension_factor*(edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180))),
                                     edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
                                     close=True,
-                                    fill=f"rgb{get_color(color_list, piece)}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({get_color(color_list, piece)})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 rotate_by += 30
@@ -159,21 +165,21 @@ def generate_image(form_data, cube_side_length):
 
         d.append(draw.Rectangle(-cube_side_length/2, -half_edge_length,
                                 corner_side_length, (2*half_edge_length),
-                                fill=f"rgb{left_eq_color}",
-                                stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                fill=f"rgb({left_eq_color})",
+                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                 transform=f"{translate}"))
 
         if not squan.equator_flipped:
             d.append(draw.Rectangle(-half_edge_length, -half_edge_length,
                                 corner_side_length+(2*half_edge_length), (2*half_edge_length),
-                                fill=f"rgb{right_eq_color}",
-                                stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                fill=f"rgb({right_eq_color})",
+                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                 transform=f"{translate}"))
         else:
             d.append(draw.Rectangle(-half_edge_length, -half_edge_length,
                                 corner_side_length, (2*half_edge_length),
-                                fill=f"rgb{right_eq_color}",
-                                stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                fill=f"rgb({right_eq_color})",
+                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                 transform=f"{translate}"))
 
     # draw bottom
@@ -182,10 +188,16 @@ def generate_image(form_data, cube_side_length):
     if form_data.get("include_D") == "on":
         translate = f"translate{d_coord}"
 
-        d.append(draw.Line(edge_vector[0]*1.5, edge_vector[1]*1.5,
-                            edge_vector[0]*-1.5, edge_vector[1]*-1.5,
-                            stroke=f"rgb{border_color}", stroke_width=border_thickness,
-                            transform=f"{translate} rotate(-30)"))
+        if extension_factor >= 1 or extension_factor <= 1:
+            d.append(draw.Line(edge_vector[0]*(extension_factor*1.2), edge_vector[1]*(extension_factor*1.2),
+                                edge_vector[0]*-(extension_factor*1.2), edge_vector[1]*-(extension_factor*1.2),
+                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                transform=f"{translate} rotate(-30)"))
+        else:
+            d.append(draw.Line(edge_vector[0]*1.2, edge_vector[1]*1.2,
+                                edge_vector[0]*-1.2, edge_vector[1]*-1.2,
+                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                transform=f"{translate} rotate(-30)"))
 
         for piece in squan.bottom.__str__():
             rotation= f"rotate({rotate_by})"
@@ -204,8 +216,8 @@ def generate_image(form_data, cube_side_length):
                                     half_diag_vector[0], half_diag_vector[1],
                                     half_diag_vector[0], -edge_vector[0],
                                     close=True,
-                                    fill=f"rgb{current_color}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({current_color})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
@@ -215,8 +227,8 @@ def generate_image(form_data, cube_side_length):
                                     half_diag_vector[0]*extension_factor, half_diag_vector[1]*extension_factor,
                                     half_diag_vector[0], half_diag_vector[1],
                                     close=True,
-                                    fill=f"rgb{get_color(color_list, piece)}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({get_color(color_list, piece)})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
                     d.append(draw.Lines(
                                     half_diag_vector[0], half_diag_vector[1],
@@ -224,8 +236,8 @@ def generate_image(form_data, cube_side_length):
                                     half_diag_vector[0]*extension_factor, -edge_vector[0]*extension_factor,
                                     half_diag_vector[0], -edge_vector[0],
                                     close=True,
-                                    fill=f"rgb{get_color(color_list, piece, 1)}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({get_color(color_list, piece, 1)})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 rotate_by += 60
@@ -242,8 +254,8 @@ def generate_image(form_data, cube_side_length):
                                     edge_vector[0], edge_vector[1],
                                     edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
                                     close=True,
-                                    fill=f"rgb{current_color}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({current_color})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 if form_data["scheme"] == "Normal":
@@ -253,8 +265,8 @@ def generate_image(form_data, cube_side_length):
                                     extension_factor*(edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180))), extension_factor*(edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180))),
                                     edge_vector[0]-(2*half_edge_length*math.cos(30*math.pi/180)), edge_vector[1]-(2*half_edge_length*math.sin(30*math.pi/180)),
                                     close=True,
-                                    fill=f"rgb{get_color(color_list, piece)}",
-                                    stroke=f"rgb{border_color}", stroke_width=border_thickness,
+                                    fill=f"rgb({get_color(color_list, piece)})",
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
                                     transform=f"{translate} {rotation}"))
 
                 rotate_by += 30
