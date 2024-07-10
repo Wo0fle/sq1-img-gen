@@ -10,7 +10,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 1. Choose your input type.
     - **Case**: Your input will solve the Square-1 in the generated image.
-        - *This input type is inteded for algset designers. It works by inverting the input and then applying it (so that the image generated will be the case the algorithm solves). Be careful in that the inverted input can be applied properly (in the context of algsets, this usually means starting and ending in cubeshape with no misaligned layers).*
+        - *This input type is intended for algset designers. It works by inverting the input and then applying it (so that the image generated will be the case the algorithm solves). Be careful in that the inverted input can be applied properly (in the context of algsets, this usually means starting and ending in cubeshape with no misaligned layers).*
     - **Algorithm**: Your input will be applied to a solved Square-1 to generate the image.
     - **State**: Your inputted [sq1optim](https://www.jaapsch.net/puzzles/square1.htm#progs) state will be the Square-1's state in the generated image.
 
@@ -30,7 +30,6 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 4. Choose which layers to include.
     - You can choose to include any combination of **top**, **bottom**, and **equator** layers (so long as you choose **at least one**).
-        - Sometimes, the image will generate with a different set of layers than the ones you have selected. Clicking the "**Reload Image**" button should correct it. 
 
 <br>
 
@@ -39,7 +38,8 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 <br>
 
-6. If it hasn't showed up already, click the "**Reload Image**" button, and your generated image should appear on the right!
+6. If it hasn't already loaded correctly, click the "**Reload Image**" button, and your generated image should appear on the right!
+    - I like clicking the button after I am done changing my desired settings, just in case something is generated incorrectly and I can't tell at a glance.
     - If there is an error with the input, it will generate an image of a solved Square-1. If you weren't expecting a solved Square-1, check your input for typos, and make sure you chose the correct input type.
         - I am working on adding error messages, so errors should be more clear after I do that!
 
@@ -52,7 +52,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 ### Advanced Settings:
 
 - **Custom colors:** Input any valid RGB value into the text box to change that part of the image to your desired color!
-    - This includes all the sides (for Normal and Orientation renders), the border (for all renders), and the shape color (for equator in Orietation render and everything in Shape render).
+    - This includes all the sides (for Normal and Orientation renders), the border (for all renders), and the shape color (for equator in Orientation render and everything in Shape render).
 - **Custom extension factor:** Input any numerical value to change how far the pieces extend into/out of the top/bottom sides!
     - Values above 1 lead to the sides sticking out of the top/bottom. Values below 1 lead to the sides sticking into the top/bottom. A value of 1 leads to no visible side colors on the top/bottom layers (but you will be able to see them on the equator). Values below 0 lead to some weird-looking things that kind of look cool sometimes.
 
