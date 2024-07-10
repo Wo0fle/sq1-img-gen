@@ -34,8 +34,7 @@ def generate_image(form_data, cube_side_length):
     shape_color = form_data["shapecolor"]
 
     img_width = cube_side_length * 2
-    img_height = img_width * 2.15
-
+    
     extension_factor = float(form_data["extensionfactor"])
     border_thickness = int((1/130)*img_width)
 
@@ -48,17 +47,80 @@ def generate_image(form_data, cube_side_length):
     edge_vector = [-half_edge_length, edge_height]
     half_diag_vector = [-cube_side_length/2, cube_side_length/2]
 
-    # init
-    if form_data["img_orientation"] == "Vertical":
-        d = draw.Drawing(img_width, img_height, origin='center')
-        u_coord = (0, -1.1*cube_side_length)
-        e_coord = (0, 0)
-        d_coord = (0, 1.1*cube_side_length)
+    layers_to_include = []
+
+    if form_data.get("include_U") == "on":
+        layers_to_include.append(True)
     else:
-        d = draw.Drawing(img_height, 1.2*img_width, origin='center')
-        u_coord = (-cube_side_length, 0)
-        e_coord = (0, (cube_side_length/2)+corner_side_length)
-        d_coord = (cube_side_length, 0)
+        layers_to_include.append(False)
+    
+    if form_data.get("include_E") == "on":
+        layers_to_include.append(True)
+    else:
+        layers_to_include.append(False)
+
+    if form_data.get("include_D") == "on":
+        layers_to_include.append(True)
+    else:
+        layers_to_include.append(False)
+
+    if layers_to_include.count(True) == 1:
+        img_height = img_width
+
+        d = draw.Drawing(img_width, img_height, origin='center')
+
+        u_coord = (0, 0)
+        e_coord = (0, 0)
+        d_coord = (0, 0)
+    else:
+        if form_data["img_orientation"] == "Vertical":
+            if layers_to_include.count(True) == 2:
+                img_height = img_width * 1.3
+
+                if form_data.get("include_U") == "on":
+                    e_coord = (0, (-img_height/2)+(2.15*cube_side_length))
+                    
+                    if form_data.get("include_E") != "on":
+                        img_height = img_width * 1.9
+                else:
+                    e_coord = (0, (img_height/2)-(2.15*cube_side_length))
+                
+                u_coord = (0, (-img_height/2)+cube_side_length)
+                d_coord = (0, (img_height/2)-cube_side_length)
+
+                d = draw.Drawing(img_width, img_height, origin='center')
+            else:
+                img_height = img_width * 2.15
+
+                d = draw.Drawing(img_width, img_height, origin='center')
+
+                u_coord = (0, (-img_height/2)+cube_side_length)
+                e_coord = (0, 0)
+                d_coord = (0, (img_height/2)-cube_side_length)
+        else: # horizontal
+            if layers_to_include.count(True) == 2:
+                img_height = img_width * 1.8
+                
+                if form_data.get("include_U") == "on":
+                    e_coord = ((img_height/2)-cube_side_length, 0)
+
+                    if form_data.get("include_E") != "on":
+                        img_height = img_width * 1.9
+                else:
+                    e_coord = ((-img_height/2)+cube_side_length, 0)
+
+                u_coord = ((-img_height/2)+cube_side_length, 0)
+                d_coord = ((img_height/2)-cube_side_length, 0)
+
+                d = draw.Drawing(img_height, img_width, origin='center')
+            else:
+                img_height = img_width * 2.15
+
+                d = draw.Drawing(img_height, 1.2*img_width, origin='center')
+
+                u_coord = ((-img_height/2)+cube_side_length, -half_edge_length)
+                e_coord = (0, (cube_side_length/2)+corner_side_length)
+                d_coord = ((img_height/2)-cube_side_length, -half_edge_length)
 
     # draw top
     rotate_by = 0
