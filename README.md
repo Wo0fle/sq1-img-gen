@@ -30,6 +30,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 4. Choose which layers to include.
     - You can choose to include any combination of **top**, **bottom**, and **equator** layers (so long as you choose **at least one**).
+        - Sometimes, the image will generate with a different set of layers than the ones you have selected. Clicking the "**Reload Image**" button should correct it. 
 
 <br>
 
@@ -38,9 +39,8 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 <br>
 
-6. Click the "**Generate**" button, and your generated image should appear on the right!
-    - Sometimes it takes a little bit of time to generate, so if it doesn't appear immediately, wait for a few seconds.
-    - Additionally, if there is an error with the input, it will generate an image of a solved Square-1. If you weren't expecting a solved Square-1, check your input for typos, and make sure you chose the correct input type.
+6. If it hasn't showed up already, click the "**Reload Image**" button, and your generated image should appear on the right!
+    - If there is an error with the input, it will generate an image of a solved Square-1. If you weren't expecting a solved Square-1, check your input for typos, and make sure you chose the correct input type.
         - I am working on adding error messages, so errors should be more clear after I do that!
 
 <br>

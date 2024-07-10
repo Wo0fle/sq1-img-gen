@@ -49,17 +49,17 @@ def generate_image(form_data, cube_side_length):
 
     layers_to_include = []
 
-    if form_data.get("include_U") == "on":
+    if form_data.get("include_U"):
         layers_to_include.append(True)
     else:
         layers_to_include.append(False)
     
-    if form_data.get("include_E") == "on":
+    if form_data.get("include_E"):
         layers_to_include.append(True)
     else:
         layers_to_include.append(False)
 
-    if form_data.get("include_D") == "on":
+    if form_data.get("include_D"):
         layers_to_include.append(True)
     else:
         layers_to_include.append(False)
@@ -77,10 +77,10 @@ def generate_image(form_data, cube_side_length):
             if layers_to_include.count(True) == 2:
                 img_height = img_width * 1.3
 
-                if form_data.get("include_U") == "on":
+                if form_data.get("include_U"):
                     e_coord = (0, (-img_height/2)+(2.15*cube_side_length))
                     
-                    if form_data.get("include_E") != "on":
+                    if not form_data.get("include_E"):
                         img_height = img_width * 1.9
                 else:
                     e_coord = (0, (img_height/2)-(2.15*cube_side_length))
@@ -101,10 +101,10 @@ def generate_image(form_data, cube_side_length):
             if layers_to_include.count(True) == 2:
                 img_height = img_width * 1.8
                 
-                if form_data.get("include_U") == "on":
+                if form_data.get("include_U"):
                     e_coord = ((img_height/2)-cube_side_length, 0)
 
-                    if form_data.get("include_E") != "on":
+                    if not form_data.get("include_E"):
                         img_height = img_width * 1.9
                 else:
                     e_coord = ((-img_height/2)+cube_side_length, 0)
@@ -125,7 +125,7 @@ def generate_image(form_data, cube_side_length):
     # draw top
     rotate_by = 0
 
-    if form_data.get("include_U") == "on":
+    if form_data.get("include_U"):
         translate = f"translate{u_coord}"
 
         if extension_factor >= 1 or extension_factor <= 1:
@@ -212,7 +212,7 @@ def generate_image(form_data, cube_side_length):
                 rotate_by += 30
 
     # draw equator
-    if form_data.get("include_E") == "on":
+    if form_data.get("include_E"):
         translate = f"translate{e_coord}"
 
         if form_data["scheme"] != "Normal":
@@ -247,7 +247,7 @@ def generate_image(form_data, cube_side_length):
     # draw bottom
     rotate_by = 150
 
-    if form_data.get("include_D") == "on":
+    if form_data.get("include_D"):
         translate = f"translate{d_coord}"
 
         if extension_factor >= 1 or extension_factor <= 1:
