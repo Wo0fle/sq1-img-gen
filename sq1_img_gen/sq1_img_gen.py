@@ -11,7 +11,7 @@ class FormState(rx.State):
     leftcolor: str = "0, 73, 255"
     rightcolor: str = "0, 255, 0"
     shapecolor: str = "100, 100, 100"
-    extensionfactor: str = "1.2"
+    extensionfactor: str = "1.25"
     form_data: dict = {
         "text_input": "",
         "input_type": "Case",
@@ -29,6 +29,7 @@ class FormState(rx.State):
         "rightcolor": rightcolor,
         "shapecolor": shapecolor,
         "extensionfactor": extensionfactor,
+        "sliceindicator": True,
     }
     img: str = ""
     
@@ -68,6 +69,7 @@ def index():
                                     rx.radio(
                                         ["Case", "Algorithm", "State"],
                                         default_value="Case",
+                                        direction="column",
                                         name="input_type",
                                         spacing="3",
                                         on_change=lambda value: FormState.handle_change("input_type", value),
@@ -88,7 +90,6 @@ def index():
                                     ["Normal", "Orientation", "Shape"],
                                     default_value="Normal",
                                     name="scheme",
-                                    direction="row",
                                     spacing="5",
                                     margin_bottom="10px",
                                     on_change=lambda value: FormState.handle_change("scheme", value),
@@ -153,7 +154,7 @@ def index():
                                     rx.html("<br>"),
                                     rx.hstack(
                                         rx.text("Extension factor: "),
-                                        rx.input(name="extensionfactor", placeholder="Default: 1.2", value=FormState.extensionfactor, on_change=lambda value: FormState.handle_change("extensionfactor", value)),
+                                        rx.input(name="extensionfactor", placeholder="Default: 1.25", value=FormState.extensionfactor, on_change=lambda value: FormState.handle_change("extensionfactor", value)),
                                         rx.dialog.root(
                                             rx.dialog.trigger(rx.link(rx.icon("circle-help"), href="#")),
                                             rx.dialog.content(
@@ -166,6 +167,15 @@ def index():
                                                 ),
                                             ),
                                         ),
+                                    ),
+                                    rx.html("<br>"),
+                                    rx.hstack(
+                                        rx.checkbox(
+                                            name="sliceindicator",
+                                            default_checked=True,
+                                            on_change=lambda value: FormState.handle_change("sliceindicator", value),
+                                        ),
+                                        rx.text("Include slice indcator"),
                                     ),
                                 ),
                             ),
@@ -202,8 +212,7 @@ all_is_margin_auto = {
 }
 
 app = rx.App(
-    theme=rx.theme(appearance="dark"),
-    accent_color="blue",
+    theme=rx.theme(accent_color='blue'),
     style=all_is_margin_auto,
 )
 app.add_page(index)

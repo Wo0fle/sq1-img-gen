@@ -35,7 +35,11 @@ def generate_image(form_data, cube_side_length):
 
     img_width = cube_side_length * 2
     
-    extension_factor = float(form_data["extensionfactor"])
+    try:
+        extension_factor = float(form_data["extensionfactor"])
+    except ValueError:
+        extension_factor = 1.25
+    
     border_thickness = int((1/130)*img_width)
 
     color_list = [front_color, left_color, back_color, right_color]
@@ -128,16 +132,17 @@ def generate_image(form_data, cube_side_length):
     if form_data.get("include_U"):
         translate = f"translate{u_coord}"
 
-        if extension_factor >= 1 or extension_factor <= 1:
-            d.append(draw.Line(edge_vector[0]*(extension_factor*1.2), edge_vector[1]*(extension_factor*1.2),
-                                edge_vector[0]*-(extension_factor*1.2), edge_vector[1]*-(extension_factor*1.2),
-                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
-                                transform=f"{translate}"))
-        else:
-            d.append(draw.Line(edge_vector[0]*1.2, edge_vector[1]*1.2,
-                                edge_vector[0]*-1.2, edge_vector[1]*-1.2,
-                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
-                                transform=f"{translate}"))
+        if form_data.get("sliceindicator"):
+            if extension_factor >= 1 or extension_factor <= 1:
+                d.append(draw.Line(edge_vector[0]*(extension_factor*1.25), edge_vector[1]*(extension_factor*1.25),
+                                    edge_vector[0]*-(extension_factor*1.25), edge_vector[1]*-(extension_factor*1.25),
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                    transform=f"{translate}"))
+            else:
+                d.append(draw.Line(edge_vector[0]*1.25, edge_vector[1]*1.25,
+                                    edge_vector[0]*-1.25, edge_vector[1]*-1.25,
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                    transform=f"{translate}"))
         
         for piece in squan.top.__str__():
             rotation= f"rotate({rotate_by})"
@@ -250,16 +255,17 @@ def generate_image(form_data, cube_side_length):
     if form_data.get("include_D"):
         translate = f"translate{d_coord}"
 
-        if extension_factor >= 1 or extension_factor <= 1:
-            d.append(draw.Line(edge_vector[0]*(extension_factor*1.2), edge_vector[1]*(extension_factor*1.2),
-                                edge_vector[0]*-(extension_factor*1.2), edge_vector[1]*-(extension_factor*1.2),
-                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
-                                transform=f"{translate} rotate(-30)"))
-        else:
-            d.append(draw.Line(edge_vector[0]*1.2, edge_vector[1]*1.2,
-                                edge_vector[0]*-1.2, edge_vector[1]*-1.2,
-                                stroke=f"rgb({border_color})", stroke_width=border_thickness,
-                                transform=f"{translate} rotate(-30)"))
+        if form_data.get("sliceindicator"):
+            if extension_factor >= 1 or extension_factor <= 1:
+                d.append(draw.Line(edge_vector[0]*(extension_factor*1.25), edge_vector[1]*(extension_factor*1.25),
+                                    edge_vector[0]*-(extension_factor*1.25), edge_vector[1]*-(extension_factor*1.25),
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                    transform=f"{translate} rotate(-30)"))
+            else:
+                d.append(draw.Line(edge_vector[0]*1.25, edge_vector[1]*1.25,
+                                    edge_vector[0]*-1.25, edge_vector[1]*-1.25,
+                                    stroke=f"rgb({border_color})", stroke_width=border_thickness,
+                                    transform=f"{translate} rotate(-30)"))
 
         for piece in squan.bottom.__str__():
             rotation= f"rotate({rotate_by})"

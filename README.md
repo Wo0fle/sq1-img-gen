@@ -1,6 +1,6 @@
 # Seby's Square-1 Image Generator
 
-### https://sq1-img-gen.reflex.run
+### https://sq1-img-gen-gold-grass.reflex.run
 
 ## Made using [Reflex](https://github.com/reflex-dev/reflex)!
 
@@ -55,22 +55,28 @@ This Square-1 image generator is designed to be customizable to your heart's con
     - This includes all the sides (for Normal and Orientation renders), the border (for all renders), and the shape color (for equator in Orientation render and everything in Shape render).
 - **Custom extension factor:** Input any numerical value to change how far the pieces extend into/out of the top/bottom sides!
     - Values above 1 lead to the sides sticking out of the top/bottom. Values below 1 lead to the sides sticking into the top/bottom. A value of 1 leads to no visible side colors on the top/bottom layers (but you will be able to see them on the equator). Values below 0 lead to some weird-looking things that kind of look cool sometimes.
+- **Toggle slice indicator:** Choose to remove the line running through the slice of the Square-1!
 
 <br><hr><br>
 
-- **Turning on/off slice indicator:** In the works!
+### Known Bugs:
 
-<br>
+- **Color indicator circles don't work**
+    - no clue why they dont update (might have to do with the fact that it's an `rx.box`?) but oh well maybe one day ill figure it out
+- **Changing a setting too fast makes that setting stop working**
+    - yeah i know, thats why i added the reload image button. might just go back to a "generate image button" to avoid this cuz im fairly sure it has to do with the time it takes to generate the image
 
-- **Error messages:** Hopefully will be added.
+<br><hr><br>
+
+- **Error messages:** Hopefully will be added. **REQUIRES UPDATING [virtual-sq1](https://github.com/Wo0fle/virtual-sq1)**
 - **Exporting to `.png`:** Hopefully will be added.
 - **Graying out particular pieces:** Hopefully will be added.
 
 <br>
 
-- **Labeling particular pieces:** May or may not be added.
+- **Labeling/coloring particular pieces:** May or may not be added.
 - **Custom background color:** May or may not be added.
 
 <br>
 
-- **Built-in optimal solver (using [Jaap's Square-1 Optimiser (modified by Doug Benham)](https://github.com/dougbenham/Square1-Optimizer)):** Likely won't be added, but it's on my mind.
+- **Built-in optimal solver (using [Jaap's Square-1 Optimiser (modified by Doug Benham)](https://github.com/dougbenham/Square1-Optimizer)):** Likely won't happen, but it's on my mind.
