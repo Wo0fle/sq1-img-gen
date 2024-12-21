@@ -2,6 +2,8 @@
 
 ### https://sq1-img-gen-gold-grass.reflex.run
 
+![Square-1 image generated using SSIG](./docs/images/example.svg)
+
 ## Made using [Reflex](https://github.com/reflex-dev/reflex)!
 
 This Square-1 image generator is designed to be customizable to your heart's content!
@@ -47,7 +49,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 7. Right-click and save the `.svg` file, and that's it!
 
-<br><hr>
+<br><hr><br>
 
 ### Advanced Settings:
 
@@ -64,7 +66,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 - **Color indicator circles don't work**
     - no clue why they dont update (might have to do with the fact that it's an `rx.box`?) but oh well maybe one day ill figure it out
 - **Changing a setting too fast makes that setting stop working**
-    - yeah i know, thats why i added the reload image button. might just go back to a "generate image button" to avoid this cuz im fairly sure it has to do with the time it takes to generate the image
+    - yeah man idk, thats why i added the reload image button. might just go back to a "generate image button" to avoid this cuz im fairly sure it has to do with the time it takes to generate the image
 
 <br><hr><br>
 
