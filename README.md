@@ -70,8 +70,11 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 <br><hr><br>
 
+- **Exporting to `.png`:** Currently working on it!
+
+<br>
+
 - **Error messages:** Hopefully will be added. **REQUIRES UPDATING [virtual-sq1](https://github.com/Wo0fle/virtual-sq1)**
-- **Exporting to `.png`:** Hopefully will be added.
 - **Graying out particular pieces:** Hopefully will be added.
 
 <br>
@@ -81,4 +84,4 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 <br>
 
-- **Built-in optimal solver (using [Jaap's Square-1 Optimiser (modified by Doug Benham)](https://github.com/dougbenham/Square1-Optimizer)):** Likely won't happen, but it's on my mind.
+- **Built-in optimal solver:** Likely won't happen, but it's on my mind.
