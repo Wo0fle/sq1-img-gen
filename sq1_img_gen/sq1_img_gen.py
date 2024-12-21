@@ -1,7 +1,6 @@
 import reflex as rx
 from modules.img_genner import generate_image
 
-
 class FormState(rx.State):
     bordercolor: str = "0, 0, 0"
     topcolor: str = "40, 40, 40"
@@ -32,11 +31,13 @@ class FormState(rx.State):
         "sliceindicator": True,
     }
     img: str = ""
+    png: str = ""
     
 
     def handle_submit(self, form_data: dict):
         self.form_data = form_data
         self.img = generate_image(form_data, 100)
+        self.png = self.img  + ".png"
     
     def handle_change(self, field_id: str, value: str):
         self.form_data[field_id] = value
@@ -190,8 +191,9 @@ def index():
 
             rx.vstack(
                 rx.heading("Output", margin_top=0),
-                rx.image(src=rx.get_upload_url(FormState.img)),
+                rx.image(src=rx.get_upload_url(FormState.img + ".svg")),
                 rx.button(rx.icon("refresh-ccw"), "Reload Image", on_click=FormState.handle_submit(FormState.form_data), margin_top="20px", size="3"),
+                rx.button(rx.icon("image-down"), "Export to .png", on_click=rx.download(url=rx.get_upload_url(FormState.png)), margin_top="20px", size="3"),
 
                 margin_top=0
             ),

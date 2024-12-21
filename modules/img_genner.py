@@ -10,7 +10,7 @@ def generate_image(form_data, cube_side_length):
     """
     Generates the Square-1 image with a cube of
     side length `cube_side_length` (in pixels) using
-    `form_data` and saves to `path_to_save_to`.
+    `form_data`.
     """
 
     squan = Square1()
@@ -339,8 +339,8 @@ def generate_image(form_data, cube_side_length):
 
                 rotate_by += 30
 
-    filename = f"{squan.top}{squan.bottom}_{int(time.time())}.svg"
+    filename = f"{squan.top}{squan.bottom}_{int(time.time())}"
 
-    d.save_svg(f"{rx.get_upload_dir()}/{filename}")
+    d.save_svg(f"{rx.get_upload_dir()}/{filename}.svg")
 
     return filename
