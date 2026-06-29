@@ -1,6 +1,6 @@
 # Seby's Square-1 Image Generator
 
-### https://sq1-img-gen-gold-grass.reflex.run
+### https://sq1-img-gen-blue-sun.reflex.run/
 
 ![Square-1 image generated using SSIG](./docs/images/example.svg)
 
@@ -19,7 +19,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 <br>
 
 2. Input your Case/Alg/State in the text area.
-    - **Case** and **Alg** read standard Square-1 notation, **State** reads standard [sq1optim](https://www.jaapsch.net/puzzles/square1.htm#progs)/[virtual-sq1](https://github.com/Wo0fle/virtual-sq1/blob/main/docs/jared19.md) notation.
+    - **Case** and **Alg** read standard Square-1 notation, **State** reads [sq1optim](https://www.jaapsch.net/puzzles/square1.htm#progs)/[virtual-sq1](https://github.com/Wo0fle/virtual-sq1/blob/main/docs/jared19.md) notation.
 
 <br>
 
@@ -47,7 +47,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 <br>
 
-7. Right-click and save the `.svg` file, and that's it!
+7. Click the "Download .png" or "Download .svg" buttons, and that's it!
 
 <br><hr><br>
 
@@ -63,25 +63,18 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 ### Known Bugs:
 
-- **Color indicator circles don't work**
-    - no clue why they dont update (might have to do with the fact that it's an `rx.box`?) but oh well maybe one day ill figure it out
-- **Changing a setting too fast makes that setting stop working**
-    - yeah man idk, thats why i added the reload image button. might just go back to a "generate image button" to avoid this cuz im fairly sure it has to do with the time it takes to generate the image
+- **Changing a setting too fast makes that setting stop working briefly**
+    - I'm not really sure that I can do anything about this, so that is why I added the "Reload Image" button :/
 
 <br><hr><br>
 
-- **Exporting to `.png`:** Currently working on it!
+- **Error messages:** Will be added. **REQUIRES UPDATING [virtual-sq1](https://github.com/Wo0fle/virtual-sq1)**
 
 <br>
 
-- **Error messages:** Hopefully will be added. **REQUIRES UPDATING [virtual-sq1](https://github.com/Wo0fle/virtual-sq1)**
 - **Graying out particular pieces:** Hopefully will be added.
 
 <br>
 
 - **Labeling/coloring particular pieces:** May or may not be added.
 - **Custom background color:** May or may not be added.
-
-<br>
-
-- **Built-in optimal solver:** Likely won't happen, but it's on my mind.

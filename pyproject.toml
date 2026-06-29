@@ -1,0 +1,13 @@
+[project]
+name = "sq1-img-gen"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "drawsvg==2.4.0",
+    "pyvips-binary==8.18.3",
+    "pyvips[binary]==3.1.1",
+    "reflex==0.9.6.post1",
+    "virtual-sq1==1.1.0",
+]
