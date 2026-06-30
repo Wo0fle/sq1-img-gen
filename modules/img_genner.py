@@ -4,7 +4,6 @@ import math
 import time
 from virtual_sq1 import Square1
 from modules.color_scheme import get_color
-
 import pyvips
 
 
@@ -348,4 +347,4 @@ def generate_image(form_data, cube_side_length):
     pngyay = pyvips.Image.new_from_file(f"{rx.get_upload_dir()}/{filename}.svg")
     pngyay.write_to_file(f"{rx.get_upload_dir()}/{filename}.png")
 
-    return filename
+    return filename, squan.error_message

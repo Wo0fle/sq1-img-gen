@@ -68,11 +68,7 @@ This Square-1 image generator is designed to be customizable to your heart's con
 
 <br><hr><br>
 
-- **Error messages:** Will be added. **REQUIRES UPDATING [virtual-sq1](https://github.com/Wo0fle/virtual-sq1)**
-
-<br>
-
-- **Graying out particular pieces:** Hopefully will be added.
+- **Graying out particular pieces:** Might be added.
 
 <br>
 

@@ -33,11 +33,12 @@ class FormState(rx.State):
     img: str = ""
     png: str = ""
     svg: str = ""
+    error_message: str = ""
 
     @rx.event
     def handle_submit(self, form_data: dict):
         self.form_data = form_data
-        self.img = generate_image(form_data, 100)
+        self.img, self.error_message = generate_image(form_data, 100)
         self.png = self.img  + ".png"
         self.svg = self.img  + ".svg"
     
@@ -77,6 +78,14 @@ class FormState(rx.State):
     @rx.var
     def shapecolor_rgb(self) -> str:
         return f"rgb({self.form_data["shapecolor"]})"
+    
+    @rx.var
+    def whathappen(self) -> str:
+        if self.error_message == "":
+            return self.error_message
+        else:
+            return self.error_message[:-34]
+            
 
 
 @rx.page(title="Seby's Square-1 Image Generator")
@@ -236,12 +245,14 @@ def index():
             rx.vstack(
                 rx.heading("Output",margin="auto",margin_top=0),
                 rx.image(src=rx.get_upload_url(FormState.img + ".svg"),margin="auto",),
+                rx.text(FormState.whathappen, margin="auto", align="center"),
                 rx.button(rx.icon("refresh-ccw"), "Reload Image", on_click=FormState.handle_submit(FormState.form_data), margin="auto",margin_top="20px", size="3"),
                 rx.button(rx.icon("image-down"), "Download .png", on_click=rx.download(url=rx.get_upload_url(FormState.png)), margin="auto",margin_top="20px", size="3"),
                 rx.button(rx.icon("image-down"), "Download .svg", on_click=rx.download(url=rx.get_upload_url(FormState.svg)), margin="auto",margin_top="20px", size="3"),
 
                 margin="auto",
-                margin_top=0
+                margin_top=0,
+                width="200px"
             ),
         
         margin_top=0,
